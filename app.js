@@ -401,7 +401,8 @@ async function initGoogleSheetsCatalog() {
     console.warn('[Google Sheets] No se pudieron cargar los datos remotos, se mantienen los productos base:', err);
   } finally {
     catalogLoading = false;
-    renderCatalog();
+    // Si ya se veía la carta guardada, se actualiza sin volver a animar las tarjetas
+    renderCatalog({ animate: !cachedProducts });
   }
 }
 
@@ -478,31 +479,55 @@ const SKELETON_CARD_HTML = `
   </article>
 `;
 
-function renderCatalog() {
+const catalogResultCount = document.getElementById('catalogResultCount');
+
+function matchesCategoryFilter(product, filter) {
+  return filter === 'all' ||
+         product.category === filter ||
+         (filter === 'facturas' && product.category === 'croissants') ||
+         (filter === 'croissants' && product.category === 'facturas');
+}
+
+// Cada pastilla muestra cuántos productos trae la carta; las categorías vacías se ocultan
+function updateCategoryPills() {
+  document.querySelectorAll('.category-pill-card').forEach(pill => {
+    const filter = pill.dataset.filter;
+    const count = PRODUCTS_DATA.filter(product => matchesCategoryFilter(product, filter)).length;
+    const countEl = pill.querySelector('.category-pill-count');
+    if (countEl) countEl.textContent = count;
+    pill.hidden = count === 0 && filter !== 'all' && filter !== currentFilter;
+  });
+}
+
+// animate: las tarjetas entran escalonadas (se evita al tipear en el buscador)
+function renderCatalog({ animate = true } = {}) {
   if (!productsGrid) return;
 
   if (catalogLoading) {
     productsGrid.style.display = 'grid';
     noResultsState.style.display = 'none';
     productsGrid.setAttribute('aria-busy', 'true');
+    productsGrid.classList.remove('is-animating');
     productsGrid.innerHTML = SKELETON_CARD_HTML.repeat(6);
+    if (catalogResultCount) catalogResultCount.textContent = '';
     return;
   }
   productsGrid.removeAttribute('aria-busy');
+  updateCategoryPills();
 
   // Filtrado
   const query = normalizeText(currentSearch);
   let filtered = PRODUCTS_DATA.filter(product => {
-    const matchesCategory = currentFilter === 'all' ||
-                            product.category === currentFilter ||
-                            (currentFilter === 'facturas' && product.category === 'croissants') ||
-                            (currentFilter === 'croissants' && product.category === 'facturas');
     const matchesQuery = !query ||
                          normalizeText(product.name).includes(query) ||
                          normalizeText(product.description).includes(query) ||
                          normalizeText(CATEGORY_LABELS[product.category]).includes(query);
-    return matchesCategory && matchesQuery;
+    return matchesCategoryFilter(product, currentFilter) && matchesQuery;
   });
+
+  if (catalogResultCount) {
+    catalogResultCount.textContent = filtered.length === 0 ? '' : `${filtered.length} ${filtered.length === 1 ? 'delicia' : 'delicias'}`;
+  }
 
   // Ordenamiento
   if (currentSort === 'price-asc') {
@@ -524,13 +549,14 @@ function renderCatalog() {
   }
 
   // Generar HTML
-  productsGrid.innerHTML = filtered.map(product => {
+  productsGrid.classList.toggle('is-animating', animate);
+  productsGrid.innerHTML = filtered.map((product, index) => {
     const isAvailable = product.available !== false;
     const id = escapeHtml(product.id);
     const name = escapeHtml(product.name);
     const hasVariants = product.variants && product.variants.length > 1;
     return `
-      <article class="product-card ${isAvailable ? '' : 'is-out-of-stock'}" data-id="${id}">
+      <article class="product-card ${isAvailable ? '' : 'is-out-of-stock'}" data-id="${id}" style="--i: ${Math.min(index, 8)}">
         <div class="product-card-thumb-wrapper" data-action="quickview" data-id="${id}">
           <img src="${escapeHtml(product.image)}" alt="${name}" class="product-card-img" loading="lazy" decoding="async" referrerpolicy="no-referrer" data-fallback="${escapeHtml(product.fallbackImage || getFallbackImage(product.name, product.category))}">
           ${!isAvailable
@@ -614,11 +640,11 @@ function closeCart() {
 // Agregar Item al Carrito
 function addToCart(productId, variantIndex = 0, quantity = 1) {
   const product = PRODUCTS_DATA.find(p => p.id === productId);
-  if (!product) return;
+  if (!product) return false;
 
   if (product.available === false) {
     showToast(`<strong>${escapeHtml(product.name)}</strong> se encuentra actualmente sin stock.`, '<i class="fa-solid fa-ban"></i>');
-    return;
+    return false;
   }
 
   const variant = product.variants ? product.variants[variantIndex] : { name: 'Estándar', price: product.basePrice };
@@ -643,6 +669,59 @@ function addToCart(productId, variantIndex = 0, quantity = 1) {
   saveCartToStorage();
   updateCartUI();
   showToast(`¡Agregaste <strong>${escapeHtml(product.name)}</strong> a tu canasta!`, '<i class="fa-solid fa-basket-shopping"></i>');
+  return true;
+}
+
+// Una miniatura del producto vuela en arco hasta el botón de la canasta.
+// Así se confirma el agregado sin abrir la canasta y se puede seguir eligiendo.
+function flyToCart(sourceEl, imageSrc) {
+  const target = document.getElementById('cartTriggerBtn');
+  if (!sourceEl || !target || !imageSrc) return;
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+  const from = sourceEl.getBoundingClientRect();
+  const to = target.getBoundingClientRect();
+  if (!from.width || !to.width) return;
+
+  const size = Math.min(Math.max(from.width * 0.4, 64), 120);
+  const dx = (to.left + to.width / 2) - (from.left + from.width / 2);
+  const dy = (to.top + to.height / 2) - (from.top + from.height / 2);
+
+  const flyer = document.createElement('div');
+  flyer.className = 'cart-flyer';
+  flyer.style.width = flyer.style.height = `${size}px`;
+  flyer.style.left = `${from.left + from.width / 2 - size / 2}px`;
+  flyer.style.top = `${from.top + from.height / 2 - size / 2}px`;
+
+  const img = document.createElement('img');
+  img.alt = '';
+  img.referrerPolicy = 'no-referrer';
+  img.src = imageSrc;
+  flyer.appendChild(img);
+  document.body.appendChild(flyer);
+
+  // El eje X avanza parejo y el Y toma impulso antes de salir: juntos dibujan el arco
+  const duration = 800;
+  flyer.animate(
+    [{ transform: 'translateX(0)' }, { transform: `translateX(${dx}px)` }],
+    { duration, easing: 'cubic-bezier(0.3, 0, 0.7, 1)', fill: 'forwards' }
+  );
+  const flight = img.animate(
+    [
+      { transform: 'translateY(0) scale(1)', opacity: 1 },
+      { opacity: 1, offset: 0.75 },
+      { transform: `translateY(${dy}px) scale(0.18)`, opacity: 0.4 }
+    ],
+    { duration, easing: 'cubic-bezier(0.5, -0.4, 0.9, 0.6)', fill: 'forwards' }
+  );
+
+  flight.onfinish = flight.oncancel = () => {
+    flyer.remove();
+    // La canasta "recibe" el producto
+    target.classList.remove('cart-landed');
+    void target.offsetWidth; // reinicia la animación
+    target.classList.add('cart-landed');
+  };
 }
 
 // Modificar Cantidad
@@ -682,7 +761,14 @@ function updateCartUI() {
   const { subtotal, total, totalItems } = calculateTotals();
 
   // Badges y Headers
-  if (cartBadge) cartBadge.textContent = totalItems;
+  if (cartBadge) {
+    if (totalItems > 0 && cartBadge.textContent !== String(totalItems)) {
+      cartBadge.classList.remove('bump');
+      void cartBadge.offsetWidth; // reinicia la animación
+      cartBadge.classList.add('bump');
+    }
+    cartBadge.textContent = totalItems;
+  }
   if (cartHeaderTotal) cartHeaderTotal.textContent = formatCurrency(total);
   if (cartDrawerCount) cartDrawerCount.textContent = `${totalItems} producto${totalItems === 1 ? '' : 's'}`;
 
@@ -822,9 +908,9 @@ function openQuickView(productId) {
   const addBtn = quickViewContent.querySelector('#qvAddToCartBtn');
   if (addBtn) {
     addBtn.addEventListener('click', () => {
-      addToCart(product.id, selectedQuickViewVariant, 1);
+      const added = addToCart(product.id, selectedQuickViewVariant, 1);
+      if (added) flyToCart(quickViewContent.querySelector('.qv-image'), product.image);
       closeQuickView();
-      openCart();
     });
   }
 
@@ -1163,7 +1249,7 @@ if (addCustomCakeToCartBtn) {
     cart.push(customItem);
     saveCartToStorage();
     updateCartUI();
-    openCart();
+    flyToCart(customCakePreviewImg, customItem.image);
     showToast(`¡Torta personalizada agregada a tu canasta!`, '<i class="fa-solid fa-basket-shopping"></i>');
   });
 }
@@ -1448,8 +1534,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
       if (addBtn) {
         const id = addBtn.dataset.id;
-        addToCart(id, 0, 1);
-        openCart();
+        const cardImg = addBtn.closest('.product-card')?.querySelector('.product-card-img');
+        // currentSrc: si la foto del Sheet falló, vuela la de respaldo que se está viendo
+        if (addToCart(id, 0, 1)) flyToCart(cardImg, cardImg?.currentSrc || cardImg?.src);
       } else if (quickViewBtn) {
         const id = quickViewBtn.dataset.id;
         openQuickView(id);
@@ -1502,7 +1589,7 @@ document.addEventListener('DOMContentLoaded', () => {
     catalogSearchInput.addEventListener('input', (e) => {
       currentSearch = e.target.value.trim();
       clearSearchBtn.style.display = currentSearch ? 'block' : 'none';
-      renderCatalog();
+      renderCatalog({ animate: false });
     });
   }
 
@@ -1564,77 +1651,105 @@ document.addEventListener('DOMContentLoaded', () => {
   ];
 
   let currentCakeIndex = 0;
-  let autoSlideTimer = null;
-  const AUTO_SLIDE_INTERVAL_MS = 3500; // Cambio continuo constante cada 3.5 segundos
 
   const featuredCakeImg = document.getElementById('featuredCakeImg');
   const featuredCakeCaption = document.getElementById('featuredCakeCaption');
   const prevCakeBtn = document.getElementById('prevCakeBtn');
   const nextCakeBtn = document.getElementById('nextCakeBtn');
+  const sliderDots = document.getElementById('sliderDots');
   const dotBtns = document.querySelectorAll('.dot-btn');
   const heroShowcaseCard = document.getElementById('heroShowcaseCard');
 
+  // Dos capas de imagen apiladas: la nueva se funde sobre la anterior
+  let activeCakeLayer = featuredCakeImg;
+  let idleCakeLayer = null;
+  if (featuredCakeImg) {
+    idleCakeLayer = featuredCakeImg.cloneNode(false);
+    idleCakeLayer.removeAttribute('id');
+    idleCakeLayer.removeAttribute('fetchpriority');
+    idleCakeLayer.classList.remove('is-active');
+    idleCakeLayer.alt = '';
+    featuredCakeImg.after(idleCakeLayer);
+  }
+
   function updateFeaturedCake(newIndex) {
     if (!featuredCakeImg) return;
-    
+
     currentCakeIndex = (newIndex + FEATURED_CAKES.length) % FEATURED_CAKES.length;
     const cake = FEATURED_CAKES[currentCakeIndex];
 
-    featuredCakeImg.classList.add('fade');
-    setTimeout(() => {
-      featuredCakeImg.src = cake.image;
-      featuredCakeImg.alt = cake.alt;
-      if (featuredCakeCaption) featuredCakeCaption.textContent = cake.caption;
-      featuredCakeImg.classList.remove('fade');
-    }, 180);
-
+    if (featuredCakeCaption) featuredCakeCaption.textContent = cake.caption;
     dotBtns.forEach((dot, idx) => {
       dot.classList.toggle('active', idx === currentCakeIndex);
     });
-  }
 
-  function startAutoSlide() {
-    stopAutoSlide();
-    autoSlideTimer = setInterval(() => {
-      updateFeaturedCake(currentCakeIndex + 1);
-    }, AUTO_SLIDE_INTERVAL_MS);
-  }
-
-  function stopAutoSlide() {
-    if (autoSlideTimer) {
-      clearInterval(autoSlideTimer);
-      autoSlideTimer = null;
-    }
+    // Recién se hace el fundido cuando la foto terminó de cargar
+    const loader = new Image();
+    loader.onload = loader.onerror = () => {
+      if (FEATURED_CAKES[currentCakeIndex] !== cake) return; // ya se pidió otra torta
+      const incoming = idleCakeLayer;
+      const outgoing = activeCakeLayer;
+      incoming.src = cake.image;
+      incoming.alt = cake.alt;
+      outgoing.alt = '';
+      incoming.classList.add('is-active');
+      outgoing.classList.remove('is-active');
+      activeCakeLayer = incoming;
+      idleCakeLayer = outgoing;
+    };
+    loader.src = cake.image;
   }
 
   if (prevCakeBtn) {
-    prevCakeBtn.addEventListener('click', () => {
-      updateFeaturedCake(currentCakeIndex - 1);
-      startAutoSlide();
-    });
+    prevCakeBtn.addEventListener('click', () => updateFeaturedCake(currentCakeIndex - 1));
   }
   if (nextCakeBtn) {
-    nextCakeBtn.addEventListener('click', () => {
-      updateFeaturedCake(currentCakeIndex + 1);
-      startAutoSlide();
-    });
+    nextCakeBtn.addEventListener('click', () => updateFeaturedCake(currentCakeIndex + 1));
   }
   dotBtns.forEach(dot => {
-    dot.addEventListener('click', () => {
-      const idx = parseInt(dot.dataset.index);
-      updateFeaturedCake(idx);
-      startAutoSlide();
-    });
+    dot.addEventListener('click', () => updateFeaturedCake(parseInt(dot.dataset.index, 10)));
   });
 
-  // Pausar rotación automática al pasar el mouse y reanudar al salir
-  if (heroShowcaseCard) {
-    heroShowcaseCard.addEventListener('mouseenter', stopAutoSlide);
-    heroShowcaseCard.addEventListener('mouseleave', startAutoSlide);
+  // El avance automático lo marca la barra que se llena en el punto activo (styles.css):
+  // al pausarse esa animación con el mouse encima, se pausa también el cambio de foto.
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (prefersReducedMotion) {
+    if (heroShowcaseCard) heroShowcaseCard.classList.add('no-autoplay');
+  } else if (sliderDots) {
+    sliderDots.addEventListener('animationend', (e) => {
+      if (e.animationName === 'dotProgress') updateFeaturedCake(currentCakeIndex + 1);
+    });
   }
 
-  // Iniciar rotación continua automática
-  startAutoSlide();
+  // Cinta de valores: se repite el grupo para que el desplazamiento no tenga corte
+  const valuesMarqueeTrack = document.getElementById('valuesMarqueeTrack');
+  if (valuesMarqueeTrack) {
+    valuesMarqueeTrack.innerHTML = valuesMarqueeTrack.innerHTML.repeat(4);
+  }
+
+  // Aparición suave de cada bloque al entrar en pantalla
+  if ('IntersectionObserver' in window) {
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (!entry.isIntersecting) return;
+        entry.target.classList.add('is-visible');
+        revealObserver.unobserve(entry.target);
+      });
+    }, { rootMargin: '0px 0px -8% 0px' });
+
+    const revealTargets = document.querySelectorAll(
+      '.section-header, .catalog-controls, .order-steps, .cake-builder-layout > *, ' +
+      '.about-image-column, .about-text-column, .testimonial-card, .faq-intro, ' +
+      '.faq-accordion-wrapper, .insta-item, .contact-card'
+    );
+    revealTargets.forEach(el => {
+      // Los elementos hermanos (reseñas, fotos) entran uno detrás del otro
+      const siblingIndex = Array.from(el.parentElement.children).indexOf(el);
+      el.style.setProperty('--reveal-delay', `${Math.min(siblingIndex, 4) * 90}ms`);
+      el.classList.add('reveal');
+      revealObserver.observe(el);
+    });
+  }
 
   // Miniaturas del Hero (Acceso rápido a categorías)
   const heroPreviewCards = document.querySelectorAll('.previews-cards-row .hero-mini-card');

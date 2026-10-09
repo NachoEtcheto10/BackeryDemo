@@ -163,7 +163,27 @@
         
         <div class="showcase-cake-card" id="heroShowcaseCard">
           <div class="showcase-img-box">
-            <img src="assets/images/hero_cake_pistachio.jpg" alt="Torta Pistacho & Frutillas Silvestres" id="featuredCakeImg" class="showcase-cake-img">
+            <img src="assets/images/hero_cake_pistachio.jpg" alt="Torta Pistacho & Frutillas Silvestres" id="featuredCakeImg" class="showcase-cake-img is-active" fetchpriority="high">
+          </div>
+
+          <!-- Sello giratorio del atelier -->
+          <div class="showcase-seal" aria-hidden="true">
+            <svg viewBox="0 0 120 120">
+              <defs>
+                <path id="sealCirclePath" d="M60,60 m-45,0 a45,45 0 1,1 90,0 a45,45 0 1,1 -90,0"/>
+              </defs>
+              <text><textPath href="#sealCirclePath" textLength="276">HORNEADO EN EL DÍA · HECHO A MANO ·</textPath></text>
+            </svg>
+            <i class="fa-solid fa-wheat-awn"></i>
+          </div>
+
+          <!-- Dato flotante de entrega -->
+          <div class="showcase-float-chip">
+            <span class="float-chip-icon"><i class="fa-solid fa-bag-shopping"></i></span>
+            <span class="float-chip-text">
+              <strong>Retiro o envío</strong>
+              <small>Pedidos con 24/48 hs</small>
+            </span>
           </div>
 
           <!-- Controles del Slider -->
@@ -195,55 +215,73 @@
     </div>
   </section>
 
-    <!-- CATEGORÍAS RÁPIDAS -->
-    <section class="categories-bar-section">
-      <div class="container">
-        <div class="categories-scroll-wrapper">
-          
-          <button class="category-pill-card active" data-filter="all">
-            <i class="fa-solid fa-layer-group category-pill-icon"></i>
-            <span class="category-pill-name">Toda la Carta</span>
-          </button>
-
-          <button class="category-pill-card" data-filter="tortas">
-            <i class="fa-solid fa-cake-candles category-pill-icon"></i>
-            <span class="category-pill-name">Tortas de Autor</span>
-          </button>
-
-          <button class="category-pill-card" data-filter="cookies">
-            <i class="fa-solid fa-cookie category-pill-icon"></i>
-            <span class="category-pill-name">Cookies NY</span>
-          </button>
-
-          <button class="category-pill-card" data-filter="alfajores">
-            <i class="fa-solid fa-cookie-bite category-pill-icon"></i>
-            <span class="category-pill-name">Alfajores Sablée</span>
-          </button>
-
-          <button class="category-pill-card" data-filter="boxes">
-            <i class="fa-solid fa-gift category-pill-icon"></i>
-            <span class="category-pill-name">Boxes & Regalos</span>
-          </button>
-
-          <button class="category-pill-card" data-filter="facturas">
-            <i class="fa-solid fa-bread-slice category-pill-icon"></i>
-            <span class="category-pill-name">Facturas</span>
-          </button>
-
+    <!-- CINTA DE VALORES DEL ATELIER -->
+    <div class="values-marquee" aria-hidden="true">
+      <div class="values-marquee-track" id="valuesMarqueeTrack">
+        <div class="values-marquee-group">
+          <span>Horneado en el día</span><i class="fa-solid fa-star-of-life"></i>
+          <span>Ingredientes nobles</span><i class="fa-solid fa-star-of-life"></i>
+          <span>Hecho a mano</span><i class="fa-solid fa-star-of-life"></i>
+          <span>Tortas a medida</span><i class="fa-solid fa-star-of-life"></i>
+          <span>Packaging boutique</span><i class="fa-solid fa-star-of-life"></i>
+          <span>Pedidos por WhatsApp</span><i class="fa-solid fa-star-of-life"></i>
         </div>
       </div>
-    </section>
+    </div>
 
     <!-- SECCIÓN CATÁLOGO / CARTA DULCE -->
     <section class="catalog-section" id="catalogo">
       <div class="container">
-        
+
         <div class="section-header text-center">
           <span class="section-subtitle">Frescura & Devoción Diaria</span>
           <h2 class="section-title">Nuestra Carta Dulce</h2>
           <p class="section-description">
             Elegí tus favoritos, personalizá las porciones o sabores y completá tu pedido en segundos. Hacemos entregas o podés retirar por nuestro atelier.
           </p>
+        </div>
+
+        <!-- Categorías: quedan fijas arriba mientras se recorre la carta -->
+        <div class="catalog-toolbar">
+          <div class="categories-scroll-wrapper">
+
+            <button class="category-pill-card active" data-filter="all">
+              <i class="fa-solid fa-layer-group category-pill-icon"></i>
+              <span class="category-pill-name">Toda la Carta</span>
+              <span class="category-pill-count"></span>
+            </button>
+
+            <button class="category-pill-card" data-filter="tortas">
+              <i class="fa-solid fa-cake-candles category-pill-icon"></i>
+              <span class="category-pill-name">Tortas de Autor</span>
+              <span class="category-pill-count"></span>
+            </button>
+
+            <button class="category-pill-card" data-filter="cookies">
+              <i class="fa-solid fa-cookie category-pill-icon"></i>
+              <span class="category-pill-name">Cookies NY</span>
+              <span class="category-pill-count"></span>
+            </button>
+
+            <button class="category-pill-card" data-filter="alfajores">
+              <i class="fa-solid fa-cookie-bite category-pill-icon"></i>
+              <span class="category-pill-name">Alfajores Sablée</span>
+              <span class="category-pill-count"></span>
+            </button>
+
+            <button class="category-pill-card" data-filter="boxes">
+              <i class="fa-solid fa-gift category-pill-icon"></i>
+              <span class="category-pill-name">Boxes & Regalos</span>
+              <span class="category-pill-count"></span>
+            </button>
+
+            <button class="category-pill-card" data-filter="facturas">
+              <i class="fa-solid fa-bread-slice category-pill-icon"></i>
+              <span class="category-pill-name">Facturas</span>
+              <span class="category-pill-count"></span>
+            </button>
+
+          </div>
         </div>
 
         <!-- Buscador y Filtros Dinámicos -->
@@ -256,14 +294,17 @@
             </button>
           </div>
 
-          <div class="sort-box">
-            <label for="catalogSortSelect"><i class="fa-solid fa-arrow-down-short-wide"></i> Ordenar:</label>
-            <select id="catalogSortSelect">
-              <option value="featured">Destacados</option>
-              <option value="price-asc">Menor precio</option>
-              <option value="price-desc">Mayor precio</option>
-              <option value="name-asc">Nombre (A - Z)</option>
-            </select>
+          <div class="catalog-meta">
+            <span class="catalog-result-count" id="catalogResultCount" aria-live="polite"></span>
+            <div class="sort-box">
+              <label for="catalogSortSelect"><i class="fa-solid fa-arrow-down-short-wide"></i> Ordenar:</label>
+              <select id="catalogSortSelect">
+                <option value="featured">Destacados</option>
+                <option value="price-asc">Menor precio</option>
+                <option value="price-desc">Mayor precio</option>
+                <option value="name-asc">Nombre (A - Z)</option>
+              </select>
+            </div>
           </div>
         </div>
 
@@ -278,6 +319,31 @@
         <!-- Grid de Productos -->
         <div class="products-grid" id="productsGrid">
           <!-- Renderizado dinámico vía JavaScript -->
+        </div>
+
+        <!-- Cómo se hace un pedido, en tres pasos -->
+        <div class="order-steps">
+          <div class="order-step">
+            <span class="order-step-num">01</span>
+            <div>
+              <h3>Elegí tus favoritos</h3>
+              <p>Sumá a la canasta lo que quieras de la carta o diseñá tu torta a medida.</p>
+            </div>
+          </div>
+          <div class="order-step">
+            <span class="order-step-num">02</span>
+            <div>
+              <h3>Confirmá por WhatsApp</h3>
+              <p>Tu pedido sale armado y listo para enviar. Coordinamos pago, fecha y horario.</p>
+            </div>
+          </div>
+          <div class="order-step">
+            <span class="order-step-num">03</span>
+            <div>
+              <h3>Retirá o recibilo en casa</h3>
+              <p>Pasá por el atelier o te lo llevamos, fresco y con su packaging boutique.</p>
+            </div>
+          </div>
         </div>
 
       </div>
@@ -318,11 +384,11 @@
                     <input type="radio" name="cakeDiameter" value="16cm" checked>
                     <div class="diameter-card-inner">
                       <div class="diameter-visual">
-                        <i class="fa-solid fa-circle-notch diameter-icon icon-16"></i>
+                        <span class="diameter-ring ring-16" aria-hidden="true"></span>
                         <span class="diameter-cm">16 cm</span>
                       </div>
                       <div class="diameter-info">
-                        <span class="diameter-portions" id="portions-16cm">2 rellenos: 8/10 porc. · 3 rellenos: 10/12 porc.</span>
+                        <span class="diameter-portions" id="portions-16cm">2 rellenos: 8/10 porc.<br>3 rellenos: 10/12 porc.</span>
                         <span class="diameter-price">Desde $18.500</span>
                       </div>
                     </div>
@@ -333,11 +399,11 @@
                     <div class="diameter-card-inner highlight-diameter">
                       <span class="diameter-badge">Más Elegida</span>
                       <div class="diameter-visual">
-                        <i class="fa-solid fa-circle-notch diameter-icon icon-22"></i>
+                        <span class="diameter-ring ring-22" aria-hidden="true"></span>
                         <span class="diameter-cm">22 cm</span>
                       </div>
                       <div class="diameter-info">
-                        <span class="diameter-portions" id="portions-22cm">2 rellenos: 25/30 porc. · 3 rellenos: 30/35 porc.</span>
+                        <span class="diameter-portions" id="portions-22cm">2 rellenos: 25/30 porc.<br>3 rellenos: 30/35 porc.</span>
                         <span class="diameter-price">Desde $28.500</span>
                       </div>
                     </div>
@@ -347,11 +413,11 @@
                     <input type="radio" name="cakeDiameter" value="26cm">
                     <div class="diameter-card-inner">
                       <div class="diameter-visual">
-                        <i class="fa-solid fa-circle-notch diameter-icon icon-26"></i>
+                        <span class="diameter-ring ring-26" aria-hidden="true"></span>
                         <span class="diameter-cm">26 cm</span>
                       </div>
                       <div class="diameter-info">
-                        <span class="diameter-portions" id="portions-26cm">2 rellenos: 35/40 porc. · 3 rellenos: 40/45 porc.</span>
+                        <span class="diameter-portions" id="portions-26cm">2 rellenos: 35/40 porc.<br>3 rellenos: 40/45 porc.</span>
                         <span class="diameter-price">Desde $38.500</span>
                       </div>
                     </div>
@@ -536,7 +602,7 @@
                   <span class="step-num">4</span>
                   <div>
                     <h3 class="step-title">Elegí cómo querés verme</h3>
-                    <p class="step-desc">Mandanos tu idea, foto de referencia o inspiración para tu torta personalizada</p>
+                    <p class="step-desc">Contanos cómo la imaginás y la diseñamos juntos</p>
                   </div>
                 </div>
 
@@ -798,60 +864,63 @@
 
     <!-- PREGUNTAS FRECUENTES (FAQ) -->
     <section class="faq-section" id="faq">
-      <div class="container">
-        
-        <div class="section-header text-center">
+      <div class="container faq-layout">
+
+        <div class="faq-intro">
           <span class="section-subtitle">Resolvemos tus dudas</span>
           <h2 class="section-title">Preguntas Frecuentes</h2>
           <p class="section-description">Todo lo que necesitás saber antes de realizar tu pedido en Bakery & Co.</p>
+          <a href="https://wa.me/5491123456789?text=Hola%20Bakery%20%26%20Co.!%20Tengo%20una%20consulta." target="_blank" rel="noopener noreferrer" class="btn btn-outline">
+            <i class="fa-brands fa-whatsapp"></i> Tengo otra consulta
+          </a>
         </div>
 
         <div class="faq-accordion-wrapper">
           
-          <details class="faq-item" open>
+          <details class="faq-item" name="faq" open>
             <summary class="faq-question">
               <span>¿Con cuánta anticipación debo realizar mi pedido?</span>
-              <i class="fa-solid fa-chevron-down faq-chevron"></i>
+              <span class="faq-chevron"><i class="fa-solid fa-plus"></i></span>
             </summary>
             <div class="faq-answer">
               <p>Para productos de la carta habitual (cookies, alfajores, porciones y boxes clásicos) podés pedir con <strong>24 a 48 horas</strong> de anticipación o consultar el stock disponible para el día. Para <strong>tortas de autor personalizadas o eventos</strong>, sugerimos reservar con <strong>4 a 7 días</strong> de anticipación para asegurar fecha.</p>
             </div>
           </details>
 
-          <details class="faq-item">
+          <details class="faq-item" name="faq">
             <summary class="faq-question">
               <span>¿Cómo se realizan las entregas y envíos?</span>
-              <i class="fa-solid fa-chevron-down faq-chevron"></i>
+              <span class="faq-chevron"><i class="fa-solid fa-plus"></i></span>
             </summary>
             <div class="faq-answer">
               <p>Podés retirar sin costo por nuestro atelier en Ciudad Jardín de Martes a Domingo. Además, contamos con servicio de mensajería refrigerada para toda la ciudad y alrededores, garantizando que tu torta llegue en perfecto estado térmico y visual.</p>
             </div>
           </details>
 
-          <details class="faq-item">
+          <details class="faq-item" name="faq">
             <summary class="faq-question">
               <span>¿Cuáles son los medios de pago disponibles?</span>
-              <i class="fa-solid fa-chevron-down faq-chevron"></i>
+              <span class="faq-chevron"><i class="fa-solid fa-plus"></i></span>
             </summary>
             <div class="faq-answer">
               <p>Aceptamos <strong>Transferencia Bancaria</strong>, tarjetas de crédito y débito a través de Mercado Pago, y efectivo al momento de retirar en el atelier. Al confirmar tu pedido por WhatsApp te brindamos los datos de pago al instante.</p>
             </div>
           </details>
 
-          <details class="faq-item">
+          <details class="faq-item" name="faq">
             <summary class="faq-question">
               <span>¿Cómo conservo las tortas y postres?</span>
-              <i class="fa-solid fa-chevron-down faq-chevron"></i>
+              <span class="faq-chevron"><i class="fa-solid fa-plus"></i></span>
             </summary>
             <div class="faq-answer">
               <p>Nuestras tortas con rellenos cremosos, ganache y frutas deben mantenerse refrigeradas en heladera hasta 30 minutos antes de consumir para disfrutar la textura óptima. Las cookies y alfajores se conservan a temperatura ambiente fresca en su caja cerrada por hasta 7 días.</p>
             </div>
           </details>
 
-          <details class="faq-item">
+          <details class="faq-item" name="faq">
             <summary class="faq-question">
               <span>¿Hacen opciones para personas con alergias o celiaquía?</span>
-              <i class="fa-solid fa-chevron-down faq-chevron"></i>
+              <span class="faq-chevron"><i class="fa-solid fa-plus"></i></span>
             </summary>
             <div class="faq-answer">
               <p>Contamos con opciones sin gluten en su formulación, sin embargo, como en nuestra cocina manipulamos harina de trigo, no contamos con certificación oficial libre de trazas para personas con celiaquía severa. Consultanos ante cualquier duda de alérgenos.</p>
