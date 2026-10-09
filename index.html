@@ -1,0 +1,1297 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bakery & Co. · Pastelería de Autor & Bakery Fina</title>
+  <meta name="description" content="Tortas de autor personalizadas, cookies New York, alfajores gourmet y boxes de regalo elaborados con materias primas premium en Bakery & Co. Hacé tu pedido online.">
+  <meta name="keywords" content="bakery, pasteleria, tortas personalizadas, tu torta a tu manera, cookies, alfajores, boxes de regalo, Bakery & Co">
+  
+  <!-- Open Graph / Redes Sociales -->
+  <meta property="og:title" content="Bakery & Co. · Pastelería de Autor & Bakery">
+  <meta property="og:description" content="Tu torta, a tu manera. Endulzamos tus momentos más especiales con pastelería de autor, cookies y boxes artesanales con envío o retiro en atelier.">
+  <meta property="og:image" content="assets/images/hero.jpg">
+  <meta property="og:type" content="website">
+
+  <meta name="theme-color" content="#2C1810">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/jpeg" href="assets/images/logo.jpg">
+
+  <!-- Google Fonts: Playfair Display + Plus Jakarta Sans + Cormorant Garamond -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,400;1,600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- Barra de Anuncio Superior -->
+  <aside class="announcement-bar" id="announcementBar">
+    <div class="container announcement-content">
+      <span class="announcement-pill"><i class="fa-solid fa-award"></i> Atelier Artesanal</span>
+      <p>Elaboración fresca en el día<span class="announcement-extra"> · Pedidos con 24/48hs de anticipación · Retiro en Atelier o Envíos Climatizados</span></p>
+    </div>
+  </aside>
+
+  <!-- Navegación Principal Limpia, Espaciosa y Full-Width -->
+  <header class="main-header" id="mainHeader">
+    <div class="container header-container">
+      
+      <!-- Marca y Logo -->
+      <a href="#inicio" class="brand-identity">
+        <img src="assets/images/logo.jpg" alt="Logo Bakery & Co." class="brand-logo" width="46" height="46">
+        <div class="brand-names">
+          <span class="brand-title">Bakery & Co.</span>
+          <span class="brand-subtitle">Pastelería de Autor</span>
+        </div>
+      </a>
+
+      <!-- Botón Menú Mobile (Solo visible en pantallas chicas) -->
+      <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Abrir menú de navegación">
+        <i class="fa-solid fa-bars"></i>
+      </button>
+
+      <!-- Enlaces de Navegación Desktop Espaciosos -->
+      <nav class="nav-links" id="navLinks">
+        <a href="#inicio" class="nav-link active">Inicio</a>
+        <a href="#catalogo" class="nav-link">Catálogo</a>
+        <a href="#cotizador" class="nav-link">Tu Torta a tu Manera</a>
+        <a href="#faq" class="nav-link">Preguntas</a>
+        <a href="#contacto" class="nav-link">Contacto</a>
+      </nav>
+
+      <!-- Acciones de Cabecera (Carrito) -->
+      <div class="header-actions">
+        <!-- Botón del Carrito -->
+        <button class="cart-trigger-btn" id="cartTriggerBtn" aria-label="Ver canasta de compras">
+          <div class="cart-icon-box">
+            <i class="fa-solid fa-basket-shopping"></i>
+            <span class="cart-badge" id="cartBadge">0</span>
+          </div>
+          <span class="cart-total-label" id="cartHeaderTotal">$0</span>
+        </button>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- MENÚ LATERAL MOBILE (DRAWER) -->
+  <div class="mobile-nav-backdrop" id="mobileNavBackdrop"></div>
+  <aside class="mobile-nav-drawer" id="mobileNavDrawer" aria-label="Menú de navegación móvil">
+    <div class="mobile-nav-header">
+      <div class="brand-identity">
+        <img src="assets/images/logo.jpg" alt="Logo Bakery & Co." class="brand-logo" width="40" height="40">
+        <span class="brand-title">Bakery & Co.</span>
+      </div>
+      <button class="mobile-nav-close-btn" id="closeMobileNavBtn" aria-label="Cerrar menú">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
+    <nav class="mobile-nav-links">
+      <a href="#inicio" class="mobile-link">Inicio</a>
+      <a href="#catalogo" class="mobile-link">Catálogo Dulce</a>
+      <a href="#cotizador" class="mobile-link">Tu Torta a tu Manera</a>
+      <a href="#faq" class="mobile-link">Preguntas Frecuentes</a>
+      <a href="#contacto" class="mobile-link">Contacto</a>
+    </nav>
+    <div class="mobile-nav-footer">
+      <a href="https://wa.me/5491123456789?text=Hola%20Bakery%20%26%20Co.!" target="_blank" rel="noopener noreferrer" class="btn btn-whatsapp-full">
+        <i class="fa-brands fa-whatsapp"></i> Chatear por WhatsApp
+      </a>
+    </div>
+  </aside>
+
+  <main>
+
+  <!-- SECCIÓN HERO FULL-WIDTH CENTRADA -->
+  <section class="hero-fullwidth-section" id="inicio">
+    <div class="hero-ambient-glow"></div>
+    
+    <div class="container hero-fullwidth-container">
+      
+      <!-- Columna Izquierda: Información Editorial y Acciones -->
+      <div class="hero-info-column">
+        
+        <div class="hero-top-badge">
+          <span class="badge-dot"></span>
+          <span>Pastelería de Autor · Horneado en el Día</span>
+        </div>
+
+        <h1 class="hero-main-title">
+          Tortas de autor<br>
+          <span class="hero-italic-phrase">y postres artesanales</span><br>
+          en tu ciudad
+        </h1>
+
+        <p class="hero-lead-text">
+          Pastelería fina y bocados dulces elaborados a mano con ingredientes 100% nobles para celebrar y agasajar en cada ocasión especial.
+        </p>
+
+        <div class="hero-actions-row">
+          <a href="#catalogo" class="btn btn-primary btn-hero-cta">
+            <i class="fa-solid fa-cake-candles"></i> Ver Catálogo Completo
+          </a>
+          <a href="#cotizador" class="btn btn-secondary btn-hero-secondary">
+            <i class="fa-solid fa-wand-magic-sparkles"></i> Tu Torta a tu Manera
+          </a>
+        </div>
+
+        <!-- Fila de Miniaturas de Galería Rápida -->
+        <div class="hero-previews-group">
+          <span class="previews-label">Favoritos del atelier:</span>
+          <div class="previews-cards-row">
+            <a href="#catalogo" class="hero-mini-card" data-category="cookies" title="Ver Cookies New York">
+              <img src="assets/images/preview_heart_cookies.jpg" alt="Cookies glaseadas con forma de corazón">
+              <span>Cookies Glaseadas</span>
+            </a>
+            <a href="#catalogo" class="hero-mini-card" data-category="boxes" title="Ver Boxes de Regalo">
+              <img src="assets/images/box_degustacion.jpg" alt="Box dulce de degustación y macarons">
+              <span>Boxes de Regalo</span>
+            </a>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Columna Derecha: Torta Destacada con Slider Continuo Automático -->
+      <div class="hero-showcase-column">
+        
+        <div class="showcase-cake-card" id="heroShowcaseCard">
+          <div class="showcase-img-box">
+            <img src="assets/images/hero_cake_pistachio.jpg" alt="Torta Pistacho & Frutillas Silvestres" id="featuredCakeImg" class="showcase-cake-img">
+          </div>
+
+          <!-- Controles del Slider -->
+          <div class="showcase-controls-bar">
+            <div class="showcase-arrows">
+              <button class="showcase-arrow-btn" id="prevCakeBtn" aria-label="Torta anterior" title="Anterior">
+                <i class="fa-solid fa-arrow-left"></i>
+              </button>
+              <button class="showcase-arrow-btn" id="nextCakeBtn" aria-label="Siguiente torta" title="Siguiente">
+                <i class="fa-solid fa-arrow-right"></i>
+              </button>
+            </div>
+
+            <span class="showcase-cake-title" id="featuredCakeCaption">
+              Torta Pistacho & Frutillas Silvestres
+            </span>
+
+            <div class="showcase-dots" id="sliderDots">
+              <button class="dot-btn active" data-index="0" aria-label="Torta 1"></button>
+              <button class="dot-btn" data-index="1" aria-label="Torta 2"></button>
+              <button class="dot-btn" data-index="2" aria-label="Torta 3"></button>
+              <button class="dot-btn" data-index="3" aria-label="Torta 4"></button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+    <!-- CATEGORÍAS RÁPIDAS -->
+    <section class="categories-bar-section">
+      <div class="container">
+        <div class="categories-scroll-wrapper">
+          
+          <button class="category-pill-card active" data-filter="all">
+            <i class="fa-solid fa-layer-group category-pill-icon"></i>
+            <span class="category-pill-name">Toda la Carta</span>
+          </button>
+
+          <button class="category-pill-card" data-filter="tortas">
+            <i class="fa-solid fa-cake-candles category-pill-icon"></i>
+            <span class="category-pill-name">Tortas de Autor</span>
+          </button>
+
+          <button class="category-pill-card" data-filter="cookies">
+            <i class="fa-solid fa-cookie category-pill-icon"></i>
+            <span class="category-pill-name">Cookies NY</span>
+          </button>
+
+          <button class="category-pill-card" data-filter="alfajores">
+            <i class="fa-solid fa-cookie-bite category-pill-icon"></i>
+            <span class="category-pill-name">Alfajores Sablée</span>
+          </button>
+
+          <button class="category-pill-card" data-filter="boxes">
+            <i class="fa-solid fa-gift category-pill-icon"></i>
+            <span class="category-pill-name">Boxes & Regalos</span>
+          </button>
+
+          <button class="category-pill-card" data-filter="facturas">
+            <i class="fa-solid fa-bread-slice category-pill-icon"></i>
+            <span class="category-pill-name">Facturas</span>
+          </button>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- SECCIÓN CATÁLOGO / CARTA DULCE -->
+    <section class="catalog-section" id="catalogo">
+      <div class="container">
+        
+        <div class="section-header text-center">
+          <span class="section-subtitle">Frescura & Devoción Diaria</span>
+          <h2 class="section-title">Nuestra Carta Dulce</h2>
+          <p class="section-description">
+            Elegí tus favoritos, personalizá las porciones o sabores y completá tu pedido en segundos. Hacemos entregas o podés retirar por nuestro atelier.
+          </p>
+        </div>
+
+        <!-- Buscador y Filtros Dinámicos -->
+        <div class="catalog-controls">
+          <div class="search-box">
+            <i class="fa-solid fa-magnifying-glass search-icon"></i>
+            <input type="text" id="catalogSearchInput" placeholder="Buscar por nombre, sabor o ingrediente (ej. pistacho, chocolate, frambuesa)..." aria-label="Buscar producto">
+            <button class="clear-search-btn" id="clearSearchBtn" title="Limpiar búsqueda" style="display: none;">
+              <i class="fa-solid fa-xmark"></i>
+            </button>
+          </div>
+
+          <div class="sort-box">
+            <label for="catalogSortSelect"><i class="fa-solid fa-arrow-down-short-wide"></i> Ordenar:</label>
+            <select id="catalogSortSelect">
+              <option value="featured">Destacados</option>
+              <option value="price-asc">Menor precio</option>
+              <option value="price-desc">Mayor precio</option>
+              <option value="name-asc">Nombre (A - Z)</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Mensaje de Búsqueda sin Resultados -->
+        <div class="no-results-state" id="noResultsState" style="display: none;">
+          <div class="no-results-icon"><i class="fa-solid fa-cake-candles"></i></div>
+          <h3>No encontramos ningún manjar con esa búsqueda</h3>
+          <p>Probá buscando con otros ingredientes como chocolate, dulce de leche o alfajores.</p>
+          <button class="btn btn-secondary btn-sm" id="resetFiltersBtn">Ver toda la carta</button>
+        </div>
+
+        <!-- Grid de Productos -->
+        <div class="products-grid" id="productsGrid">
+          <!-- Renderizado dinámico vía JavaScript -->
+        </div>
+
+      </div>
+    </section>
+
+    <!-- SECCIÓN INTERACTIVA: TU TORTA, A TU MANERA (CUSTOM CAKE STUDIO) -->
+    <section class="custom-cake-section" id="cotizador">
+      <div class="container">
+        
+        <div class="section-header text-center custom-cake-header">
+          <span class="section-subtitle"><i class="fa-solid fa-cake-candles"></i> Pastelería de Autor & Diseño Personalizado</span>
+          <h2 class="section-title">Tu torta, a tu manera</h2>
+          <p class="section-description">
+            Elegí el tamaño, bizcochuelo, tus rellenos favoritos y mandanos tu foto de referencia o temática para hornear la torta de tus sueños.
+          </p>
+        </div>
+
+        <div class="cake-builder-layout">
+          
+          <!-- Columna Izquierda: Configuración Interactiva Paso a Paso -->
+          <div class="builder-form-card">
+            <form id="customCakeForm" class="custom-cake-form">
+              
+              <!-- PASO 1: Elegí mi tamaño -->
+              <div class="builder-step-block">
+                <div class="builder-step-heading">
+                  <span class="step-num">1</span>
+                  <div>
+                    <h3 class="step-title">Elegí mi tamaño</h3>
+                    <p class="step-desc">Seleccioná el diámetro y la cantidad de rellenos según tus invitados</p>
+                  </div>
+                </div>
+
+                <!-- Selección de Diámetro -->
+                <div class="cake-diameters-grid" id="cakeDiameterOptions">
+                  
+                  <label class="cake-diameter-card">
+                    <input type="radio" name="cakeDiameter" value="16cm" checked>
+                    <div class="diameter-card-inner">
+                      <div class="diameter-visual">
+                        <i class="fa-solid fa-circle-notch diameter-icon icon-16"></i>
+                        <span class="diameter-cm">16 cm</span>
+                      </div>
+                      <div class="diameter-info">
+                        <span class="diameter-portions" id="portions-16cm">2 rellenos: 8/10 porc. · 3 rellenos: 10/12 porc.</span>
+                        <span class="diameter-price">Desde $18.500</span>
+                      </div>
+                    </div>
+                  </label>
+
+                  <label class="cake-diameter-card">
+                    <input type="radio" name="cakeDiameter" value="22cm">
+                    <div class="diameter-card-inner highlight-diameter">
+                      <span class="diameter-badge">Más Elegida</span>
+                      <div class="diameter-visual">
+                        <i class="fa-solid fa-circle-notch diameter-icon icon-22"></i>
+                        <span class="diameter-cm">22 cm</span>
+                      </div>
+                      <div class="diameter-info">
+                        <span class="diameter-portions" id="portions-22cm">2 rellenos: 25/30 porc. · 3 rellenos: 30/35 porc.</span>
+                        <span class="diameter-price">Desde $28.500</span>
+                      </div>
+                    </div>
+                  </label>
+
+                  <label class="cake-diameter-card">
+                    <input type="radio" name="cakeDiameter" value="26cm">
+                    <div class="diameter-card-inner">
+                      <div class="diameter-visual">
+                        <i class="fa-solid fa-circle-notch diameter-icon icon-26"></i>
+                        <span class="diameter-cm">26 cm</span>
+                      </div>
+                      <div class="diameter-info">
+                        <span class="diameter-portions" id="portions-26cm">2 rellenos: 35/40 porc. · 3 rellenos: 40/45 porc.</span>
+                        <span class="diameter-price">Desde $38.500</span>
+                      </div>
+                    </div>
+                  </label>
+
+                </div>
+
+                <!-- Selector de Cantidad de Rellenos (2 o 3 rellenos) -->
+                <div class="fillings-tier-selector">
+                  <span class="sub-field-label">Cantidad de capas de relleno:</span>
+                  <div class="fillings-tier-buttons" id="fillingsTierOptions">
+                    <label class="tier-pill-label">
+                      <input type="radio" name="cakeFillingsTier" value="2" checked>
+                      <div class="tier-pill-box">
+                        <span class="tier-num">2 Rellenos</span>
+                        <span class="tier-subtext" id="tierServingsLabel2">8 / 10 porciones</span>
+                      </div>
+                    </label>
+
+                    <label class="tier-pill-label">
+                      <input type="radio" name="cakeFillingsTier" value="3">
+                      <div class="tier-pill-box">
+                        <span class="tier-num">3 Rellenos</span>
+                        <span class="tier-subtext" id="tierServingsLabel3">10 / 12 porciones</span>
+                      </div>
+                    </label>
+                  </div>
+                </div>
+
+              </div>
+
+              <!-- PASO 2: Elegí mi bizcochuelo -->
+              <div class="builder-step-block">
+                <div class="builder-step-heading">
+                  <span class="step-num">2</span>
+                  <div>
+                    <h3 class="step-title">Elegí mi bizcochuelo</h3>
+                    <p class="step-desc">Elaborados con manteca fresca de campo y materias primas nobles</p>
+                  </div>
+                </div>
+
+                <div class="sponge-choices-grid" id="spongeOptions">
+                  <label class="sponge-card">
+                    <input type="radio" name="cakeSponge" value="Chocolate" checked>
+                    <div class="sponge-card-inner">
+                      <div class="sponge-icon-box">
+                        <i class="fa-solid fa-cookie-bite"></i>
+                      </div>
+                      <span class="sponge-name">Chocolate</span>
+                      <small class="sponge-desc">Intenso cacao puro 70%</small>
+                    </div>
+                  </label>
+
+                  <label class="sponge-card">
+                    <input type="radio" name="cakeSponge" value="Vainilla">
+                    <div class="sponge-card-inner">
+                      <div class="sponge-icon-box">
+                        <i class="fa-solid fa-seedling"></i>
+                      </div>
+                      <span class="sponge-name">Vainilla</span>
+                      <small class="sponge-desc">Vainilla bourbon húmedo</small>
+                    </div>
+                  </label>
+
+                  <label class="sponge-card">
+                    <input type="radio" name="cakeSponge" value="Combinado">
+                    <div class="sponge-card-inner">
+                      <div class="sponge-icon-box">
+                        <i class="fa-solid fa-layer-group"></i>
+                      </div>
+                      <span class="sponge-name">Combinado</span>
+                      <small class="sponge-desc">Capas intercaladas de ambos</small>
+                    </div>
+                  </label>
+                </div>
+
+                <div class="sponge-footer-note">
+                  <i class="fa-solid fa-circle-info"></i>
+                  <span>Cubiertas de Buttercream y diseño a elección</span>
+                </div>
+              </div>
+
+              <!-- PASO 3: Elegí el relleno -->
+              <div class="builder-step-block">
+                <div class="builder-step-heading">
+                  <span class="step-num">3</span>
+                  <div class="step-heading-row">
+                    <div>
+                      <h3 class="step-title">Elegí el relleno</h3>
+                      <p class="step-desc" id="fillingStepInstruction">Seleccioná hasta 2 rellenos artesanales:</p>
+                    </div>
+                    <span class="fillings-counter-pill" id="fillingsCounterPill">0 / 2 elegidos</span>
+                  </div>
+                </div>
+
+                <!-- Grilla de los 9 Rellenos -->
+                <div class="fillings-selection-grid" id="fillingsSelectionGrid">
+                  
+                  <label class="filling-check-card" data-filling="Dulce de leche">
+                    <input type="checkbox" name="cakeFillings" value="Dulce de leche">
+                    <div class="filling-card-inner">
+                      <i class="fa-solid fa-spoon filling-icon"></i>
+                      <span class="filling-name">Dulce de leche</span>
+                    </div>
+                  </label>
+
+                  <label class="filling-check-card" data-filling="Nueces">
+                    <input type="checkbox" name="cakeFillings" value="Nueces">
+                    <div class="filling-card-inner">
+                      <i class="fa-solid fa-bowl-rice filling-icon"></i>
+                      <span class="filling-name">Nueces</span>
+                    </div>
+                  </label>
+
+                  <label class="filling-check-card" data-filling="Crema oreo">
+                    <input type="checkbox" name="cakeFillings" value="Crema oreo">
+                    <div class="filling-card-inner">
+                      <i class="fa-solid fa-cookie filling-icon"></i>
+                      <span class="filling-name">Crema oreo</span>
+                    </div>
+                  </label>
+
+                  <label class="filling-check-card" data-filling="Merenguitos">
+                    <input type="checkbox" name="cakeFillings" value="Merenguitos">
+                    <div class="filling-card-inner">
+                      <i class="fa-solid fa-cloud filling-icon"></i>
+                      <span class="filling-name">Merenguitos</span>
+                    </div>
+                  </label>
+
+                  <label class="filling-check-card" data-filling="Dulce de leche con chips">
+                    <input type="checkbox" name="cakeFillings" value="Dulce de leche con chips">
+                    <div class="filling-card-inner">
+                      <i class="fa-solid fa-cubes-stacked filling-icon"></i>
+                      <span class="filling-name">Dulce de leche con chips</span>
+                    </div>
+                  </label>
+
+                  <label class="filling-check-card" data-filling="Ganache de chocolate">
+                    <input type="checkbox" name="cakeFillings" value="Ganache de chocolate">
+                    <div class="filling-card-inner">
+                      <i class="fa-solid fa-droplet filling-icon"></i>
+                      <span class="filling-name">Ganache de chocolate</span>
+                    </div>
+                  </label>
+
+                  <label class="filling-check-card" data-filling="Ganache de chocolate blanco">
+                    <input type="checkbox" name="cakeFillings" value="Ganache de chocolate blanco">
+                    <div class="filling-card-inner">
+                      <i class="fa-regular fa-snowflake filling-icon"></i>
+                      <span class="filling-name">Ganache de chocolate blanco</span>
+                    </div>
+                  </label>
+
+                  <label class="filling-check-card" data-filling="Crema Bariloche">
+                    <input type="checkbox" name="cakeFillings" value="Crema Bariloche">
+                    <div class="filling-card-inner">
+                      <i class="fa-solid fa-mountain filling-icon"></i>
+                      <span class="filling-name">Crema Bariloche</span>
+                    </div>
+                  </label>
+
+                  <label class="filling-check-card" data-filling="Crema Chantilly">
+                    <input type="checkbox" name="cakeFillings" value="Crema Chantilly">
+                    <div class="filling-card-inner">
+                      <i class="fa-solid fa-ice-cream filling-icon"></i>
+                      <span class="filling-name">Crema Chantilly</span>
+                    </div>
+                  </label>
+
+                </div>
+
+                <small class="field-hint" id="fillingsMaxWarning" style="display: none; color: var(--color-primary-dark);">
+                  <i class="fa-solid fa-circle-exclamation"></i> Ya seleccionaste el máximo permitido para este tamaño. Desmarcá uno si querés cambiarlo.
+                </small>
+
+              </div>
+
+              <!-- PASO 4: Elegí cómo querés verme -->
+              <div class="builder-step-block">
+                <div class="builder-step-heading">
+                  <span class="step-num">4</span>
+                  <div>
+                    <h3 class="step-title">Elegí cómo querés verme</h3>
+                    <p class="step-desc">Mandanos tu idea, foto de referencia o inspiración para tu torta personalizada</p>
+                  </div>
+                </div>
+
+                <!-- Banner Inspiracional con Corazón -->
+                <div class="inspiration-banner-card">
+                  <p class="inspiration-main-prompt">Mandanos tu idea, foto de referencia o inspiración para tu torta personalizada</p>
+                  <div class="inspiration-heart-divider">
+                    <span class="divider-line"></span>
+                    <i class="fa-solid fa-heart divider-heart"></i>
+                    <span class="divider-line"></span>
+                  </div>
+                  <p class="inspiration-tags">Colores, temática, decoración, frases, y más!</p>
+                </div>
+
+                <!-- Zona de Subida de Fotos de Referencia -->
+                <div class="photo-upload-container">
+                  <label class="sub-field-label">Foto(s) de referencia o inspiración:</label>
+                  
+                  <div class="photo-dropzone-box" id="photoDropzone">
+                    <input type="file" id="cakePhotoUpload" class="photo-file-input" accept="image/*" multiple>
+                    <div class="dropzone-content">
+                      <i class="fa-solid fa-cloud-arrow-up dropzone-icon"></i>
+                      <span class="dropzone-text">Hacé clic para adjuntar foto(s) de referencia</span>
+                      <small class="dropzone-sub">JPG, PNG o WEBP · Podés subir 1 o varias fotos</small>
+                    </div>
+                  </div>
+
+                  <!-- Galería de Miniaturas de Fotos Adjuntas -->
+                  <div class="attached-previews-grid" id="attachedPreviewsGrid" style="display: none;"></div>
+                </div>
+
+                <!-- Frase Escrita & Detalles -->
+                <div class="phrase-inputs-row mt-3">
+                  <div class="phrase-field">
+                    <label for="cakeCustomPhrase" class="sub-field-label">Frase escrita sobre la torta (Opcional):</label>
+                    <input type="text" id="cakeCustomPhrase" class="cake-text-input" placeholder="Ej: Feliz Cumpleaños · Te Amo · 25 & Fabulous" value="Feliz Cumpleaños" maxlength="35">
+                    <small class="field-hint">Se previsualiza en caligrafía en la tarjeta de la derecha</small>
+                  </div>
+
+                  <div class="date-field">
+                    <label for="cakeEventDate" class="sub-field-label">Fecha del evento / entrega *:</label>
+                    <input type="date" id="cakeEventDate" class="cake-date-input" required>
+                    <small class="field-hint">Mínimo 48hs de anticipación</small>
+                  </div>
+                </div>
+
+                <!-- Notas Adicionales de Colores y Temática -->
+                <div class="form-group mt-3">
+                  <label for="cakeCustomNotes" class="sub-field-label">Detalles de temática, colores o decoración deseada:</label>
+                  <textarea id="cakeCustomNotes" class="cake-text-input" rows="2" placeholder="Ej: Buttercream verde salvia y blanco, diseño vintage con flores naturales y perlas comestibles..."></textarea>
+                </div>
+
+              </div>
+
+            </form>
+          </div>
+
+          <!-- Columna Derecha: Tarjeta de Vista Previa & Acciones (Sticky) -->
+          <div class="builder-preview-sticky">
+            <div class="live-cake-preview-card">
+              
+              <div class="preview-card-media">
+                <img src="assets/images/custom_cake_vintage.jpg" alt="Vista previa de torta personalizada" id="customCakePreviewImg" class="preview-main-img" loading="lazy" decoding="async">
+                
+                <!-- Placa Caligráfica de la Frase Escrita -->
+                <div class="cake-phrase-overlay" id="cakePhraseOverlay">
+                  <span class="phrase-overlay-label">Escrito en la torta:</span>
+                  <span class="phrase-script-text" id="cakeScriptPreview">"Feliz Cumpleaños"</span>
+                </div>
+              </div>
+
+              <div class="preview-card-content">
+                <div class="preview-header-meta">
+                  <h4 class="preview-title" id="previewFormatTitle">Torta 16 cm</h4>
+                  <span class="preview-servings-badge" id="previewServingsBadge">8 a 10 porciones</span>
+                </div>
+
+                <!-- Chips de Especificaciones en Vivo -->
+                <div class="live-specs-chips">
+                  <div class="spec-chip">
+                    <i class="fa-solid fa-cake-candles"></i>
+                    <span id="chipSpongeName">Bizcochuelo Chocolate</span>
+                  </div>
+                  <div class="spec-chip">
+                    <i class="fa-solid fa-layer-group"></i>
+                    <span id="chipTierName">2 Rellenos</span>
+                  </div>
+                  <div class="spec-chip full-width-chip" id="chipFillingsContainer">
+                    <i class="fa-solid fa-spoon"></i>
+                    <span id="chipFillingsText">Sin rellenos seleccionados</span>
+                  </div>
+                  <div class="spec-chip ref-photo-chip" id="chipPhotoRefNotice" style="display: none;">
+                    <i class="fa-solid fa-camera"></i>
+                    <span id="chipPhotoRefText">Foto de referencia adjunta</span>
+                  </div>
+                </div>
+
+                <div class="preview-price-box">
+                  <div class="price-data">
+                    <span class="price-title">Presupuesto Estimado</span>
+                    <span class="price-amount" id="customCakeEstimatePrice">$18.500</span>
+                  </div>
+                  <span class="price-clarification">Base estimada · Consultar disponibilidad de agenda</span>
+                </div>
+
+                <!-- Botones de Acción: Cotizar WhatsApp + Agregar a la Canasta -->
+                <div class="builder-actions-stack">
+                  <button type="button" class="btn btn-whatsapp-full btn-lg" id="sendCustomCakeWhatsappBtn">
+                    <i class="fa-brands fa-whatsapp"></i> Cotizar y Pedir por WhatsApp
+                  </button>
+                  <button type="button" class="btn btn-secondary btn-block" id="addCustomCakeToCartBtn">
+                    <i class="fa-solid fa-basket-shopping"></i> Agregar al Carrito con este Detalle
+                  </button>
+                </div>
+
+                <p class="preview-guarantee">
+                  <i class="fa-solid fa-circle-check"></i> Te respondemos al instante para confirmar disponibilidad, detalles y fotos de inspiración.
+                </p>
+
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- HISTORIA / ATELIER / LA PASTELERA -->
+    <section class="about-section" id="historia">
+      <div class="container about-container">
+        
+        <div class="about-image-column">
+          <div class="about-image-frame">
+            <img src="assets/images/chef.jpg" alt="Pastelera preparando tortas en el atelier de Bakery & Co." class="about-chef-img" loading="lazy" decoding="async">
+            <div class="about-badge-signature">
+              <span class="sig-name">Bakery & Co.</span>
+              <span class="sig-role">Amor en cada batido</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="about-text-column">
+          <span class="section-subtitle">Detrás de Nuestro Atelier</span>
+          <h2 class="section-title">Pastelería creada con pasión, calma y los mejores ingredientes.</h2>
+          
+          <p class="about-lead">
+            «Creo firmemente que una torta no es solo un postre, sino el centro de un recuerdo inolvidable con las personas que amamos.»
+          </p>
+
+          <p class="about-body">
+            En <strong>Bakery & Co.</strong> combinamos técnicas clásicas de pastelería europea con sabores que nos transportan a la infancia: abundante dulce de leche repostero, frambuesas frescas de la Patagonia y chocolate cobertura de origen belga.
+          </p>
+
+          <div class="artisan-features-grid">
+            <div class="feature-box">
+              <div class="feature-icon"><i class="fa-solid fa-egg"></i></div>
+              <div class="feature-texts">
+                <h4>Ingredientes Nobles</h4>
+                <p>Huevos de granja, 100% manteca y chauchas de vainilla natural.</p>
+              </div>
+            </div>
+
+            <div class="feature-box">
+              <div class="feature-icon"><i class="fa-solid fa-clock-rotate-left"></i></div>
+              <div class="feature-texts">
+                <h4>Horneado en el Día</h4>
+                <p>Nuestras masas y bizcochos nunca se congelan; todo sale fresco de nuestro horno.</p>
+              </div>
+            </div>
+
+            <div class="feature-box">
+              <div class="feature-icon"><i class="fa-solid fa-gift"></i></div>
+              <div class="feature-texts">
+                <h4>Packaging Boutique</h4>
+                <p>Cajas rígidas reutilizables con cintas de satén listas para regalar.</p>
+              </div>
+            </div>
+
+            <div class="feature-box">
+              <div class="feature-icon"><i class="fa-solid fa-heart"></i></div>
+              <div class="feature-texts">
+                <h4>Atención Personalizada</h4>
+                <p>Diseñamos cada torta junto a vos para que sea exactamente como la soñaste.</p>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- TESTIMONIOS & OPINIONES -->
+    <section class="testimonials-section">
+      <div class="container">
+        
+        <div class="section-header text-center">
+          <span class="section-subtitle">Momentos Felices</span>
+          <h2 class="section-title">Lo que dicen quienes ya probaron</h2>
+          <p class="section-description">La felicidad de nuestros clientes en sus cumpleaños, baby showers y meriendas es nuestro mejor galardón.</p>
+        </div>
+
+        <div class="testimonials-grid">
+          
+          <div class="testimonial-card">
+            <div class="testimonial-stars">
+              <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+            </div>
+            <p class="testimonial-text">
+              «Encargué la Torta Velvet Frambuesa para el cumple de mi mamá y fue el éxito total de la fiesta. La crema no es empalagosa, el bizcocho súper húmedo y la presentación parecía de una pastelería en París. ¡Ya somos clientas fijas!»
+            </p>
+            <div class="testimonial-author">
+              <div class="author-avatar">CM</div>
+              <div class="author-info">
+                <strong>Camila Morales</strong>
+                <span>Cumpleaños familiar · Reseña de Google</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="testimonial-card highlight-card">
+            <div class="testimonial-stars">
+              <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+            </div>
+            <p class="testimonial-text">
+              «Las cookies New York son de otro planeta, crocantes por fuera y puro chocolate derretido adentro con sal marina. Y el Box Sweet Delight que mandé de regalo para un aniversario llegó impecable y con tarjeta divina.»
+            </p>
+            <div class="testimonial-author">
+              <div class="author-avatar">LG</div>
+              <div class="author-info">
+                <strong>Lucía Gómez</strong>
+                <span>Box Regalo & Cookies · Pedido WhatsApp</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="testimonial-card">
+            <div class="testimonial-stars">
+              <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+            </div>
+            <p class="testimonial-text">
+              «El pedido por la página fue comodísimo, me armó el mensaje de WhatsApp al instante y coordinamos el retiro sin demoras. Los alfajores de pistacho con chocolate amargo son adictivos. ¡100% recomendable!»
+            </p>
+            <div class="testimonial-author">
+              <div class="author-avatar">ST</div>
+              <div class="author-info">
+                <strong>Sofía Toranzo</strong>
+                <span>Merienda de amigas · Reseña de Instagram</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- PREGUNTAS FRECUENTES (FAQ) -->
+    <section class="faq-section" id="faq">
+      <div class="container">
+        
+        <div class="section-header text-center">
+          <span class="section-subtitle">Resolvemos tus dudas</span>
+          <h2 class="section-title">Preguntas Frecuentes</h2>
+          <p class="section-description">Todo lo que necesitás saber antes de realizar tu pedido en Bakery & Co.</p>
+        </div>
+
+        <div class="faq-accordion-wrapper">
+          
+          <details class="faq-item" open>
+            <summary class="faq-question">
+              <span>¿Con cuánta anticipación debo realizar mi pedido?</span>
+              <i class="fa-solid fa-chevron-down faq-chevron"></i>
+            </summary>
+            <div class="faq-answer">
+              <p>Para productos de la carta habitual (cookies, alfajores, porciones y boxes clásicos) podés pedir con <strong>24 a 48 horas</strong> de anticipación o consultar el stock disponible para el día. Para <strong>tortas de autor personalizadas o eventos</strong>, sugerimos reservar con <strong>4 a 7 días</strong> de anticipación para asegurar fecha.</p>
+            </div>
+          </details>
+
+          <details class="faq-item">
+            <summary class="faq-question">
+              <span>¿Cómo se realizan las entregas y envíos?</span>
+              <i class="fa-solid fa-chevron-down faq-chevron"></i>
+            </summary>
+            <div class="faq-answer">
+              <p>Podés retirar sin costo por nuestro atelier en Ciudad Jardín de Martes a Domingo. Además, contamos con servicio de mensajería refrigerada para toda la ciudad y alrededores, garantizando que tu torta llegue en perfecto estado térmico y visual.</p>
+            </div>
+          </details>
+
+          <details class="faq-item">
+            <summary class="faq-question">
+              <span>¿Cuáles son los medios de pago disponibles?</span>
+              <i class="fa-solid fa-chevron-down faq-chevron"></i>
+            </summary>
+            <div class="faq-answer">
+              <p>Aceptamos <strong>Transferencia Bancaria</strong>, tarjetas de crédito y débito a través de Mercado Pago, y efectivo al momento de retirar en el atelier. Al confirmar tu pedido por WhatsApp te brindamos los datos de pago al instante.</p>
+            </div>
+          </details>
+
+          <details class="faq-item">
+            <summary class="faq-question">
+              <span>¿Cómo conservo las tortas y postres?</span>
+              <i class="fa-solid fa-chevron-down faq-chevron"></i>
+            </summary>
+            <div class="faq-answer">
+              <p>Nuestras tortas con rellenos cremosos, ganache y frutas deben mantenerse refrigeradas en heladera hasta 30 minutos antes de consumir para disfrutar la textura óptima. Las cookies y alfajores se conservan a temperatura ambiente fresca en su caja cerrada por hasta 7 días.</p>
+            </div>
+          </details>
+
+          <details class="faq-item">
+            <summary class="faq-question">
+              <span>¿Hacen opciones para personas con alergias o celiaquía?</span>
+              <i class="fa-solid fa-chevron-down faq-chevron"></i>
+            </summary>
+            <div class="faq-answer">
+              <p>Contamos con opciones sin gluten en su formulación, sin embargo, como en nuestra cocina manipulamos harina de trigo, no contamos con certificación oficial libre de trazas para personas con celiaquía severa. Consultanos ante cualquier duda de alérgenos.</p>
+            </div>
+          </details>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- GALERÍA INSTAGRAM / SOCIAL PROOF -->
+    <section class="instagram-section">
+      <div class="container text-center">
+        <span class="section-subtitle">Seguinos en redes</span>
+        <h2 class="section-title">@bakeryandco</h2>
+        <p class="section-description">Descubrí las historias del día, videos del proceso artesanal y recetas recién horneadas.</p>
+        
+        <div class="instagram-grid">
+          <div class="insta-item">
+            <img loading="lazy" decoding="async" src="assets/images/torta_frambuesa.jpg" alt="Torta frambuesa Bakery & Co.">
+            <div class="insta-overlay">
+              <i class="fa-brands fa-instagram"></i>
+            </div>
+          </div>
+
+          <div class="insta-item">
+            <img loading="lazy" decoding="async" src="assets/images/cookies_pack.jpg" alt="Cookies artesanales Bakery & Co.">
+            <div class="insta-overlay">
+              <i class="fa-brands fa-instagram"></i>
+            </div>
+          </div>
+
+          <div class="insta-item">
+            <img loading="lazy" decoding="async" src="assets/images/alfajores_pistacho.jpg" alt="Alfajores gourmet Bakery & Co.">
+            <div class="insta-overlay">
+              <i class="fa-brands fa-instagram"></i>
+            </div>
+          </div>
+
+          <div class="insta-item">
+            <img loading="lazy" decoding="async" src="assets/images/custom_cake_vintage.jpg" alt="Torta personalizada vintage Bakery & Co.">
+            <div class="insta-overlay">
+              <i class="fa-brands fa-instagram"></i>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-4">
+          <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" class="btn btn-outline">
+            <i class="fa-brands fa-instagram"></i> Seguir @bakeryandco en Instagram
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- BANNER CONTACTO & UBICACIÓN -->
+    <section class="contact-banner-section" id="contacto">
+      <div class="container">
+        <div class="contact-card">
+          
+          <div class="contact-info">
+            <span class="section-subtitle">Estamos para ayudarte</span>
+            <h3 class="contact-title">¿Tenés una fecha especial en mente?</h3>
+            <p>Escribinos por WhatsApp para coordinar tu pedido o asesorarte sobre la mejor opción para tu festejo.</p>
+            
+            <div class="contact-details-list">
+              <div class="contact-line">
+                <i class="fa-solid fa-location-dot"></i>
+                <span>Av. de las Rosas 1420, Atelier Boutique (Retiro con cita previa)</span>
+              </div>
+              <div class="contact-line">
+                <i class="fa-regular fa-clock"></i>
+                <span>Martes a Sábados de 9:00 a 19:30 hs · Domingos de 10:00 a 14:00 hs</span>
+              </div>
+              <div class="contact-line">
+                <i class="fa-brands fa-whatsapp"></i>
+                <span>WhatsApp pedidos: +54 9 11 2345-6789</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="contact-action-box">
+            <a href="https://wa.me/5491123456789?text=Hola!%20Quisiera%20consultar%20por%20un%20pedido%20en%20Bakery%20%26%20Co." target="_blank" rel="noopener noreferrer" class="btn btn-whatsapp-lg">
+              <i class="fa-brands fa-whatsapp"></i> Chatear con la Pastelera
+            </a>
+            <span class="contact-badge-reply"><i class="fa-solid fa-clock"></i> Respuesta habitual en menos de 15 minutos</span>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="main-footer">
+    <div class="container footer-container">
+      
+      <div class="footer-col brand-col">
+        <div class="brand-identity">
+          <img src="assets/images/logo.jpg" alt="Logo Bakery & Co." class="brand-logo" width="54" height="54">
+          <div class="brand-names">
+            <span class="brand-title">Bakery & Co.</span>
+            <span class="brand-subtitle">Pastelería de Autor</span>
+          </div>
+        </div>
+        <p class="footer-tagline">
+          Momentos dulces horneados con devoción, materias primas de excelencia y estética boutique para agasajar a quienes más querés.
+        </p>
+        <div class="footer-social-links">
+          <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+          <a href="#" aria-label="Facebook"><i class="fa-brands fa-facebook"></i></a>
+          <a href="#" aria-label="TikTok"><i class="fa-brands fa-tiktok"></i></a>
+          <a href="https://wa.me/5491123456789" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
+        </div>
+      </div>
+
+      <div class="footer-col">
+        <h4 class="footer-heading">Carta & Menú</h4>
+        <ul class="footer-links">
+          <li><a href="#catalogo" data-filter="tortas">Tortas de Cumpleaños</a></li>
+          <li><a href="#catalogo" data-filter="cookies">Cookies New York</a></li>
+          <li><a href="#catalogo" data-filter="alfajores">Alfajores Artesanales</a></li>
+          <li><a href="#catalogo" data-filter="boxes">Boxes de Degustación</a></li>
+          <li><a href="#catalogo" data-filter="facturas">Facturas Artesanales</a></li>
+          <li><a href="#cotizador">Tu Torta a tu Manera</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4 class="footer-heading">Atención al Cliente</h4>
+        <ul class="footer-links">
+          <li><a href="#faq">Preguntas Frecuentes</a></li>
+          <li><a href="#contacto">Zonas de Envío</a></li>
+          <li><a href="#contacto">Tiempos de Elaboración</a></li>
+          <li><a href="#historia">Materias Primas & Calidad</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4 class="footer-heading">Medios de Pago</h4>
+        <p class="footer-small">Aceptamos transferencias bancarias, Mercado Pago, todas las tarjetas y efectivo.</p>
+        <div class="payment-badges-row">
+          <span class="payment-chip"><i class="fa-solid fa-building-columns"></i> Transferencia Bancaria</span>
+          <span class="payment-chip"><i class="fa-solid fa-credit-card"></i> Mercado Pago</span>
+          <span class="payment-chip"><i class="fa-solid fa-money-bill-wave"></i> Efectivo</span>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="footer-bottom">
+      <div class="container footer-bottom-container">
+        <p>© 2026 Bakery & Co. Pastelería Artesanal · Todos los derechos reservados.</p>
+        <p class="demo-signature">Plantilla Demo de Pastelería · Lista para personalizar con tu marca</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- MODAL: DETALLE RÁPIDO DE PRODUCTO (QUICK VIEW) -->
+  <div class="modal-overlay" id="quickViewModal" aria-hidden="true">
+    <div class="modal-dialog quick-view-dialog">
+      <button class="modal-close-btn" id="closeQuickViewBtn" aria-label="Cerrar ventana">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+      
+      <div class="quick-view-content" id="quickViewContent">
+        <!-- Renderizado dinámico -->
+      </div>
+    </div>
+  </div>
+
+  <!-- DRAWER: CARRITO DE COMPRAS LATERAL -->
+  <div class="cart-drawer-overlay" id="cartDrawerOverlay"></div>
+  
+  <aside class="cart-drawer" id="cartDrawer" aria-label="Carrito de compras">
+    
+    <div class="cart-drawer-header">
+      <div class="cart-header-title">
+        <i class="fa-solid fa-basket-shopping"></i>
+        <h3>Tu Canasta Dulce</h3>
+        <span class="cart-count-pill" id="cartDrawerCount">0 productos</span>
+      </div>
+      <button class="btn-close-drawer" id="closeCartDrawerBtn" aria-label="Cerrar carrito">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
+
+    <!-- Barra de Regalo Sorpresa / Envío Gratis -->
+    <div class="cart-reward-bar" id="cartRewardBar">
+      <div class="reward-bar-header">
+        <span class="reward-icon"><i class="fa-solid fa-gift"></i></span>
+        <span class="reward-text" id="cartRewardText">¡Sumá $25.000 para ganar una Cookie Artesanal de regalo!</span>
+      </div>
+      <div class="reward-progress-track">
+        <div class="reward-progress-fill" id="cartRewardFill" style="width: 0%;"></div>
+      </div>
+    </div>
+
+    <!-- Lista de Productos en el Carrito -->
+    <div class="cart-drawer-body" id="cartItemsContainer">
+      <!-- Si el carrito está vacío: -->
+      <div class="cart-empty-state" id="cartEmptyState">
+        <div class="empty-cart-illu"><i class="fa-solid fa-basket-shopping"></i></div>
+        <h4>Tu canasta está vacía</h4>
+        <p>Descubrí nuestras tortas y delicias para comenzar tu pedido.</p>
+        <button class="btn btn-primary btn-sm" id="btnExploreFromEmpty">Explorar Carta Dulce</button>
+      </div>
+      <!-- Items renderizados dinámicamente -->
+    </div>
+
+    <!-- Footer del Carrito -->
+    <div class="cart-drawer-footer" id="cartDrawerFooter">
+      
+      <!-- Resumen de Costos -->
+      <div class="cart-cost-breakdown">
+        <div class="cost-row">
+          <span>Subtotal</span>
+          <span id="cartSubtotalText">$0</span>
+        </div>
+        <div class="cost-row total-row">
+          <span>Total Estimado</span>
+          <span class="final-total" id="cartTotalText">$0</span>
+        </div>
+      </div>
+
+      <!-- Botón para Proceder al Checkout -->
+      <button class="btn btn-primary btn-block btn-checkout" id="proceedToCheckoutBtn">
+        <span>Completar Pedido por WhatsApp</span>
+        <i class="fa-solid fa-arrow-right"></i>
+      </button>
+
+      <p class="cart-legal-note">
+        <i class="fa-solid fa-lock"></i> Pedido 100% seguro · Coordinación inmediata por WhatsApp
+      </p>
+
+    </div>
+
+  </aside>
+
+  <!-- MODAL: CHECKOUT PASO A PASO -->
+  <div class="modal-overlay" id="checkoutModal" aria-hidden="true">
+    <div class="modal-dialog checkout-dialog">
+      <button class="modal-close-btn" id="closeCheckoutBtn" aria-label="Cerrar checkout">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+
+      <div class="checkout-header">
+        <div class="checkout-brand-mini">
+          <img src="assets/images/logo.jpg" alt="Logo Bakery & Co." width="36" height="36">
+          <span>Bakery & Co. · Checkout</span>
+        </div>
+        <h3>Finalizar tu Pedido</h3>
+        <p>Completá tus datos para generar tu orden y enviarla directamente a nuestro WhatsApp oficial.</p>
+      </div>
+
+      <form id="checkoutForm" class="checkout-form">
+        
+        <!-- Pestañas o Secciones del Formulario -->
+        <div class="checkout-sections-wrapper">
+          
+          <!-- Bloque 1: Datos Personales -->
+          <div class="checkout-block">
+            <h4 class="block-title"><i class="fa-regular fa-user"></i> 1. Tus Datos</h4>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="custName">Nombre y Apellido *</label>
+                <input type="text" id="custName" placeholder="Ej: Valentina Rossi" required>
+              </div>
+              <div class="form-group">
+                <label for="custPhone">Teléfono / WhatsApp *</label>
+                <input type="tel" id="custPhone" placeholder="Ej: 11 4567 8901" required>
+              </div>
+            </div>
+          </div>
+
+          <!-- Bloque 2: Método de Entrega -->
+          <div class="checkout-block">
+            <h4 class="block-title"><i class="fa-solid fa-truck-ramp-box"></i> 2. Tipo de Entrega</h4>
+            
+            <div class="delivery-options-toggle">
+              <label class="delivery-radio-label">
+                <input type="radio" name="deliveryType" value="pickup" checked>
+                <span class="delivery-radio-btn">
+                  <i class="fa-solid fa-store"></i>
+                  <strong>Retiro por Atelier</strong>
+                  <small>Sin costo · Ciudad Jardín</small>
+                </span>
+              </label>
+
+              <label class="delivery-radio-label">
+                <input type="radio" name="deliveryType" value="shipping">
+                <span class="delivery-radio-btn">
+                  <i class="fa-solid fa-motorcycle"></i>
+                  <strong>Envío a Domicilio</strong>
+                  <small>Coordinar costo según zona</small>
+                </span>
+              </label>
+            </div>
+
+            <!-- Campos condicionales para Envío -->
+            <div class="shipping-address-fields" id="shippingFields" style="display: none;">
+              <div class="form-row">
+                <div class="form-group full-width">
+                  <label for="custAddress">Dirección y Altura (con piso/depto) *</label>
+                  <input type="text" id="custAddress" placeholder="Ej: Av. Santa Fe 2340, 4to B">
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="custCity">Localidad / Barrio *</label>
+                  <input type="text" id="custCity" placeholder="Ej: Palermo / Centro">
+                </div>
+                <div class="form-group">
+                  <label for="custRef">Referencia / Timbre</label>
+                  <input type="text" id="custRef" placeholder="Ej: Entre calles / Timbre 4B">
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Bloque 3: Fecha & Horario Deseado -->
+          <div class="checkout-block">
+            <h4 class="block-title"><i class="fa-regular fa-calendar-check"></i> 3. Fecha y Franja Horaria</h4>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="orderDate">Fecha de Entrega/Retiro *</label>
+                <input type="date" id="orderDate" required>
+              </div>
+              <div class="form-group">
+                <label for="orderTime">Franja Horaria Preferida *</label>
+                <select id="orderTime" required>
+                  <option value="Mañana (10:00 a 13:00 hs)">Mañana (10:00 a 13:00 hs)</option>
+                  <option value="Siesta / Tarde (14:00 a 17:00 hs)">Siesta / Tarde (14:00 a 17:00 hs)</option>
+                  <option value="Tarde / Cierre (17:00 a 19:30 hs)">Tarde / Cierre (17:00 a 19:30 hs)</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- Bloque 4: Tarjeta de Dedicatoria / Mensaje Especial -->
+          <div class="checkout-block">
+            <h4 class="block-title"><i class="fa-solid fa-envelope-open-text"></i> 4. Mensaje de Regalo o Aclaraciones (Opcional)</h4>
+            <div class="form-group">
+              <label for="orderDedication">Dedicatoria para la tarjeta o instrucciones de velitas/números:</label>
+              <textarea id="orderDedication" rows="2" placeholder="Ej: '¡Feliz Cumpleaños Lau! Con mucho amor de tus amigas.' / Incluir velita dorada."></textarea>
+            </div>
+          </div>
+
+          <!-- Bloque 5: Medio de Pago -->
+          <div class="checkout-block">
+            <h4 class="block-title"><i class="fa-solid fa-credit-card"></i> 5. Método de Pago</h4>
+            <div class="payment-radios-group">
+              <label class="payment-radio-item">
+                <input type="radio" name="paymentMethod" value="Transferencia Bancaria" checked>
+                <div class="payment-info">
+                  <span class="pay-name">Transferencia Bancaria</span>
+                  <small>Te enviamos el alias/CBU al instante por WhatsApp</small>
+                </div>
+              </label>
+
+              <label class="payment-radio-item">
+                <input type="radio" name="paymentMethod" value="Mercado Pago / Tarjeta">
+                <div class="payment-info">
+                  <span class="pay-name">Mercado Pago / Tarjetas de Débito o Crédito</span>
+                  <small>Link de pago oficial seguro</small>
+                </div>
+              </label>
+
+              <label class="payment-radio-item">
+                <input type="radio" name="paymentMethod" value="Efectivo al retirar">
+                <div class="payment-info">
+                  <span class="pay-name">Efectivo al Retirar en Atelier</span>
+                  <small>Abonás al momento del retiro</small>
+                </div>
+              </label>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Resumen Final del Checkout -->
+        <div class="checkout-order-summary">
+          <div class="summary-line">
+            <span>Productos a ordenar:</span>
+            <span id="checkoutItemCount">0 items</span>
+          </div>
+          <div class="summary-line total-highlight">
+            <span>Total a Pagar:</span>
+            <span id="checkoutTotalAmount" class="price-val">$0</span>
+          </div>
+        </div>
+
+        <!-- Botón de Envío Definitivo -->
+        <button type="submit" class="btn btn-whatsapp-full btn-lg" id="submitOrderBtn">
+          <i class="fa-brands fa-whatsapp"></i> Confirmar y Abrir WhatsApp para Enviar Pedido
+        </button>
+
+      </form>
+
+    </div>
+  </div>
+
+  <!-- MODAL: CONFIRMACIÓN DE ÉXITO -->
+  <div class="modal-overlay" id="orderSuccessModal" aria-hidden="true">
+    <div class="modal-dialog success-dialog text-center">
+      <div class="success-icon-badge"><i class="fa-solid fa-circle-check"></i></div>
+      <h3 class="success-title">¡Tu Pedido ha sido Generado!</h3>
+      <p class="success-message">
+        Si tu WhatsApp no se abrió automáticamente, podés hacer clic en el botón a continuación para enviar los detalles directamente a nuestra pastelera.
+      </p>
+
+      <div class="order-code-box">
+        <span>Código de Pedido:</span>
+        <strong id="successOrderCode">BCO-8492</strong>
+      </div>
+
+      <div class="success-actions">
+        <a href="#" id="manualWhatsappLink" target="_blank" rel="noopener noreferrer" class="btn btn-whatsapp-full">
+          <i class="fa-brands fa-whatsapp"></i> Abrir WhatsApp Manualmente
+        </a>
+        <button type="button" class="btn btn-secondary btn-block" id="closeSuccessBtn">
+          Volver a la Tienda
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- CONTENEDOR DE NOTIFICACIONES TOAST -->
+  <div class="toast-container" id="toastContainer" aria-live="polite"></div>
+
+  <!-- BOTÓN FLOTANTE DE WHATSAPP -->
+  <a href="https://wa.me/5491123456789?text=Hola%20Bakery%20%26%20Co.!%20Tengo%20una%20consulta." target="_blank" rel="noopener noreferrer" class="floating-whatsapp-bubble" aria-label="Contactar por WhatsApp">
+    <i class="fa-brands fa-whatsapp"></i>
+    <span class="whatsapp-tooltip">¿Dudas? Escribinos por WhatsApp</span>
+  </a>
+
+  <!-- Script Principal -->
+  <script type="module" src="app.js"></script>
+</body>
+</html>
