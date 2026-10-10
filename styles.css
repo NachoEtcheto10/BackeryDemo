@@ -2535,6 +2535,37 @@ h1, h2, h3, h4 {
   outline-offset: 12px;
 }
 
+/* Placeholder hasta tener el retrato real de la pastelera */
+.about-chef-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 2rem;
+  text-align: center;
+  background: var(--color-bg-surface);
+  color: var(--color-text-light);
+}
+
+.about-chef-placeholder i {
+  font-size: 2.6rem;
+  color: var(--color-rose-mid);
+  margin-bottom: 0.5rem;
+}
+
+.about-chef-placeholder .placeholder-title {
+  font-family: var(--font-serif);
+  font-size: 1.6rem;
+  color: var(--color-text-muted);
+}
+
+.about-chef-placeholder .placeholder-hint {
+  font-size: 0.8rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
 .about-badge-signature {
   position: absolute;
   bottom: 34px;
