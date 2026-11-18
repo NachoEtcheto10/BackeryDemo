@@ -3,7 +3,15 @@ import { BUSINESS_CONFIG, whatsappUrl } from '../data/catalog.js';
 
 export default function Footer() {
   const location = useLocation();
-  const isSubPage = location.pathname.startsWith('/carta') || location.pathname.startsWith('/club');
+  const isSubPage =
+    location.pathname.startsWith('/carta') ||
+    location.pathname.startsWith('/club') ||
+    location.pathname.startsWith('/cuenta') ||
+    location.pathname.startsWith('/ingresar') ||
+    location.pathname.startsWith('/login') ||
+    location.pathname.startsWith('/registro') ||
+    location.pathname.startsWith('/crear-cuenta') ||
+    location.pathname.startsWith('/admin');
   const homeHref = (hash) => (isSubPage ? `/${hash}` : hash);
 
   return (
@@ -63,6 +71,7 @@ export default function Footer() {
           <ul className="footer-links">
             <li><a href={homeHref('#cumpleanos')}>Servicios de Cumpleaños</a></li>
             <li><Link to="/club">Tarjeta de Fidelidad</Link></li>
+            <li><Link to="/cuenta">Mi Cuenta / Crear Cuenta</Link></li>
             <li><a href={homeHref('#eventos')}>Alianzas & Colaboraciones</a></li>
             <li><a href={homeHref('#contacto')}>Ubicación y Horarios</a></li>
             <li><a href={homeHref('#faq')}>Preguntas Frecuentes</a></li>
@@ -88,7 +97,15 @@ export default function Footer() {
 
       <div className="footer-bottom">
         <div className="container footer-bottom-container">
-          <p>© 2026 Ambrosía Bakery · Concepción del Uruguay · Todos los derechos reservados.</p>
+          <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
+            <p>© 2026 Ambrosía Bakery · Concepción del Uruguay · Todos los derechos reservados.</p>
+            <Link
+              to="/admin"
+              className="text-[11px] font-medium text-[#FCEBCB]/65 underline-offset-2 transition hover:text-[#F9C77A] hover:underline"
+            >
+              Admin
+            </Link>
+          </div>
           <div className="sodalis-credit">
             <span>
               Hecho por <strong>Sodalis</strong>

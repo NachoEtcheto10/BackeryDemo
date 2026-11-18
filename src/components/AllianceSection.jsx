@@ -1,14 +1,25 @@
-import { motion } from 'motion/react';
-import { useEffect, useRef } from 'react';
+import { AnimatePresence, motion } from 'motion/react';
+import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { whatsappUrl } from '../data/catalog.js';
-import { Reveal, StaggerContainer, staggerItemVariants } from './MotionPrimitives.jsx';
+import { EASE_OUT_EXPO, Reveal } from './MotionPrimitives.jsx';
 
 const ORBIT_PARTNERS = [
   {
     id: 'ambrosia',
     label: 'Ambrosía',
     title: 'Ambrosía Bakery',
+    tag: 'Lo Dulce',
+    tagIcon: 'fa-solid fa-cookie-bite',
+    subtitle: 'Cookies, Tortas & Chipá',
+    description:
+      'Cookies artesanales que derriten, tortas clásicas, chipá y scones recién horneados. El toque dulce e ideal para el desayuno o el cierre de cada evento.',
+    ctaLabel: 'Ver Carta de Ambrosía',
+    ctaIcon: 'fa-solid fa-utensils',
+    cardClass: 'events-card events-card-ambrosia',
+    tagClass: 'events-tag',
+    btnClass: 'btn btn-primary btn-sm events-partner-btn',
+    logoClass: 'partner-card-logo',
     href: '/carta',
     external: false,
     logo: '/assets/images/logo_ambrosia.jpg',
@@ -20,6 +31,18 @@ const ORBIT_PARTNERS = [
     id: 'genaro',
     label: 'Focaccería Genaro',
     title: 'Focaccería Genaro',
+    tag: 'Tradición Italiana',
+    tagIcon: 'fa-solid fa-bread-slice',
+    subtitle: 'Focaccia Artesanal',
+    description:
+      'Auténtica focaccia artesanal elaborada con ingredientes frescos y sabores únicos inspirados en Italia. Juntos armamos boxes mixtas y mesas dulce & salado.',
+    ctaLabel: 'Visitar Focaccería Genaro',
+    ctaIcon: 'fa-solid fa-arrow-up-right-from-square',
+    cardClass: 'events-card events-card-genaro',
+    tagClass: 'events-tag tag-genaro',
+    btnClass: 'btn btn-sm events-partner-btn btn-genaro',
+    logoClass: 'partner-card-logo logo-genaro',
+    hasTricolore: true,
     href: 'https://focacceria-genaro.vercel.app/',
     external: true,
     logo: '/assets/images/logo_genaro.png',
@@ -31,6 +54,17 @@ const ORBIT_PARTNERS = [
     id: 'quijote',
     label: 'Don Quijote',
     title: 'Don Quijote Pizza Bar',
+    tag: 'Pizza Bar',
+    tagIcon: 'fa-solid fa-pizza-slice',
+    subtitle: 'Concepción del Uruguay',
+    description:
+      'Pizzas caseras, hamburguesas gourmet y barra de tragos en Concepción del Uruguay. Colaboramos con postres, tortas y noches temáticas especiales.',
+    ctaLabel: 'Visitar Don Quijote',
+    ctaIcon: 'fa-solid fa-arrow-up-right-from-square',
+    cardClass: 'events-card events-card-quijote',
+    tagClass: 'events-tag tag-quijote',
+    btnClass: 'btn btn-sm events-partner-btn btn-quijote',
+    logoClass: 'partner-card-logo logo-quijote',
     href: 'https://don-quijote-web-eta.vercel.app/',
     external: true,
     logo: '/assets/images/logo_quijote.jpg',
@@ -43,11 +77,20 @@ const ORBIT_PARTNERS = [
 export default function AllianceSection() {
   const stageRef = useRef(null);
   const nodeRefs = useRef([]);
+  const angleRef = useRef(0);
+  const lastFrameRef = useRef(null);
+  const pausedRef = useRef(false);
 
-  // Animación orbital en 60fps garantizada por requestAnimationFrame
+  const [selectedPartnerId, setSelectedPartnerId] = useState(null);
+  const selectedPartner = ORBIT_PARTNERS.find((p) => p.id === selectedPartnerId) || null;
+
+  useEffect(() => {
+    pausedRef.current = Boolean(selectedPartnerId);
+  }, [selectedPartnerId]);
+
+  // Animación orbital en 60fps que se frena exactamente donde quedó al hacer click
   useEffect(() => {
     let rafId = 0;
-    let startTime = null;
     const speedRadPerSec = (Math.PI * 2) / 14;
     const baseAngles = [
       -Math.PI / 2,
@@ -55,26 +98,37 @@ export default function AllianceSection() {
       -Math.PI / 2 + (Math.PI * 4) / 3
     ];
 
-    const animate = (timestamp) => {
-      if (startTime === null) startTime = timestamp;
-      const elapsedSec = (timestamp - startTime) / 1000;
+    const renderPositions = () => {
       const stageWidth = stageRef.current?.clientWidth || 380;
       const radius = stageWidth * 0.375;
 
       nodeRefs.current.forEach((el, idx) => {
         if (!el) return;
-        const angle = baseAngles[idx] + elapsedSec * speedRadPerSec;
+        const angle = baseAngles[idx] + angleRef.current;
         const x = Math.cos(angle) * radius;
         const y = Math.sin(angle) * radius;
         el.style.transform = `translate3d(${x.toFixed(2)}px, ${y.toFixed(2)}px, 0)`;
       });
+    };
 
+    const animate = (timestamp) => {
+      if (lastFrameRef.current !== null && !pausedRef.current) {
+        const dt = Math.min((timestamp - lastFrameRef.current) / 1000, 0.1);
+        angleRef.current += dt * speedRadPerSec;
+      }
+      lastFrameRef.current = timestamp;
+      renderPositions();
       rafId = requestAnimationFrame(animate);
     };
 
+    renderPositions();
     rafId = requestAnimationFrame(animate);
     return () => cancelAnimationFrame(rafId);
   }, []);
+
+  const handleTogglePartner = (id) => {
+    setSelectedPartnerId((prev) => (prev === id ? null : id));
+  };
 
   return (
     <section className="events-section" id="eventos">
@@ -91,176 +145,145 @@ export default function AllianceSection() {
           </p>
         </Reveal>
 
-        {/* Órbita animada de los 3 logos girando */}
+        {/* Órbita interactiva de los 3 globos */}
         <Reveal scale={0.92} y={16}>
-          <div
-            ref={stageRef}
-            className="relative mx-auto my-2 mb-10 flex h-[288px] w-[288px] items-center justify-center sm:mb-14 sm:h-[400px] sm:w-[400px]"
-            aria-label="Logos de la alianza girando: Ambrosía Bakery, Focaccería Genaro y Don Quijote Pizza Bar"
-          >
-            {/* Anillo punteado exacto al 37.5% de radio (inset 12.5%) */}
-            <div className="pointer-events-none absolute inset-[12.5%] rounded-full border-2 border-dashed border-[#B8761F]/45" />
+          <div className="flex flex-col items-center">
+            <div
+              ref={stageRef}
+              className="relative mx-auto my-2 flex h-[288px] w-[288px] items-center justify-center sm:h-[390px] sm:w-[390px]"
+              aria-label="Logos de la alianza girando: Ambrosía Bakery, Focaccería Genaro y Don Quijote Pizza Bar"
+            >
+              {/* Anillo punteado exacto al 37.5% de radio (inset 12.5%) */}
+              <div className="pointer-events-none absolute inset-[12.5%] rounded-full border-2 border-dashed border-[#B8761F]/45" />
 
-            {/* Halo pulsante suave en el centro */}
-            <motion.div
-              aria-hidden="true"
-              className="pointer-events-none absolute h-28 w-28 rounded-full bg-[#F9C77A]/25 sm:h-32 sm:w-32"
-              animate={{ scale: [1, 1.25, 1], opacity: [0.5, 0.15, 0.5] }}
-              transition={{ duration: 3.2, repeat: Infinity, ease: 'easeInOut' }}
-            />
+              {/* Halo pulsante suave en el centro */}
+              <motion.div
+                aria-hidden="true"
+                className="pointer-events-none absolute h-28 w-28 rounded-full bg-[#F9C77A]/25 sm:h-32 sm:w-32"
+                animate={{ scale: [1, 1.25, 1], opacity: [0.5, 0.15, 0.5] }}
+                transition={{ duration: 3.2, repeat: Infinity, ease: 'easeInOut' }}
+              />
 
-            {ORBIT_PARTNERS.map((partner, idx) => {
-              const inner = (
-                <>
+              {ORBIT_PARTNERS.map((partner, idx) => {
+                const isSelected = selectedPartnerId === partner.id;
+                return (
                   <div
-                    className={`flex h-16 w-16 items-center justify-center rounded-full border-[3px] shadow-lg transition-transform duration-300 hover:scale-110 sm:h-20 sm:w-20 ${partner.medallionClass}`}
+                    key={partner.id}
+                    ref={(el) => {
+                      nodeRefs.current[idx] = el;
+                    }}
+                    className="absolute left-1/2 top-1/2 z-20 -ml-8 -mt-8 h-16 w-16 will-change-transform sm:-ml-10 sm:-mt-10 sm:h-20 sm:w-20"
                   >
-                    <img src={partner.logo} alt={`Logo ${partner.title}`} className={partner.imgClass} />
-                  </div>
-                  <span
-                    className={`pointer-events-none absolute top-full left-1/2 mt-1 -translate-x-1/2 whitespace-nowrap rounded-full border px-2 py-0.5 text-[10px] font-bold shadow-sm sm:mt-1.5 sm:px-2.5 sm:text-[11px] ${partner.labelClass}`}
-                  >
-                    {partner.label}
-                  </span>
-                </>
-              );
-
-              return (
-                <div
-                  key={partner.id}
-                  ref={(el) => {
-                    nodeRefs.current[idx] = el;
-                  }}
-                  className="absolute left-1/2 top-1/2 z-20 -ml-8 -mt-8 h-16 w-16 will-change-transform sm:-ml-10 sm:-mt-10 sm:h-20 sm:w-20"
-                >
-                  {partner.external ? (
-                    <a
-                      href={partner.href}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      title={partner.title}
-                      className="relative block h-full w-full"
+                    <button
+                      type="button"
+                      onClick={() => handleTogglePartner(partner.id)}
+                      aria-pressed={isSelected}
+                      title={`Ver ${partner.title}`}
+                      className="relative block h-full w-full cursor-pointer border-0 bg-transparent p-0 focus:outline-none"
                     >
-                      {inner}
-                    </a>
-                  ) : (
-                    <Link to={partner.href} title={partner.title} className="relative block h-full w-full">
-                      {inner}
-                    </Link>
-                  )}
-                </div>
-              );
-            })}
+                      <div
+                        className={`flex h-16 w-16 items-center justify-center rounded-full border-[3px] shadow-lg transition-transform duration-300 hover:scale-110 sm:h-20 sm:w-20 ${
+                          partner.medallionClass
+                        } ${isSelected ? 'scale-110 ring-4 ring-[#B8761F]/45' : ''}`}
+                      >
+                        <img src={partner.logo} alt={`Logo ${partner.title}`} className={partner.imgClass} />
+                      </div>
+                      <span
+                        className={`pointer-events-none absolute top-full left-1/2 mt-1 -translate-x-1/2 whitespace-nowrap rounded-full border px-2 py-0.5 text-[10px] font-bold shadow-sm sm:mt-1.5 sm:px-2.5 sm:text-[11px] ${partner.labelClass}`}
+                      >
+                        {partner.label}
+                      </span>
+                    </button>
+                  </div>
+                );
+              })}
 
-            {/* Sello central */}
-            <div className="relative z-10 flex h-24 w-24 flex-col items-center justify-center rounded-full border-2 border-[#F9C77A]/75 bg-gradient-to-br from-[#4A2511] to-[#2E160A] p-2 text-center text-[#FFF8EC] shadow-xl sm:h-28 sm:w-28">
-              <i className="fa-solid fa-handshake mb-0.5 text-base text-[#F9C77A] sm:mb-1 sm:text-lg"></i>
-              <strong className="font-serif text-xs leading-tight sm:text-sm">Alianza x3</strong>
-              <span className="text-[9px] tracking-wide text-[#F2DFC4] sm:text-[10px]">C. del Uruguay</span>
+              {/* Sello central sin x3 */}
+              <div className="relative z-10 flex h-24 w-24 flex-col items-center justify-center rounded-full border-2 border-[#F9C77A]/75 bg-gradient-to-br from-[#4A2511] to-[#2E160A] p-2 text-center text-[#FFF8EC] shadow-xl sm:h-28 sm:w-28">
+                <i className="fa-solid fa-handshake mb-0.5 text-base text-[#F9C77A] sm:mb-1 sm:text-lg"></i>
+                <strong className="font-serif text-xs leading-tight sm:text-sm">Alianza</strong>
+                <span className="text-[9px] tracking-wide text-[#F2DFC4] sm:text-[10px]">C. del Uruguay</span>
+              </div>
             </div>
+
+            <p className="mt-4 text-center text-xs font-medium text-[#76553C] sm:text-sm">
+              {selectedPartner
+                ? 'Órbita pausada · Tocá el logo nuevamente o cerrá la ficha para reanudar.'
+                : 'Tocá cualquiera de los 3 globos para conocer cada emprendimiento.'}
+            </p>
           </div>
         </Reveal>
 
-        {/* 3 Cards personalizadas al estilo de cada emprendimiento */}
-        <StaggerContainer className="events-grid alliance-cards-grid" stagger={0.09}>
-          <motion.article
-            variants={staggerItemVariants}
-            whileHover={{ y: -6 }}
-            className="events-card events-card-ambrosia"
-          >
-            <div className="events-card-top">
-              <div className="partner-card-brand">
-                <img
-                  src="/assets/images/logo_ambrosia.jpg"
-                  alt="Logo Ambrosía Bakery"
-                  className="partner-card-logo"
-                />
-                <div>
-                  <span className="events-tag">
-                    <i className="fa-solid fa-cookie-bite"></i> Lo Dulce
-                  </span>
-                  <span className="events-date">Cookies, Tortas & Chipá</span>
-                </div>
-              </div>
-            </div>
-            <h3>Ambrosía Bakery</h3>
-            <p>
-              Cookies artesanales que derriten, tortas clásicas, chipá y scones recién horneados. El toque dulce e ideal para el desayuno o el cierre de cada evento.
-            </p>
-            <Link to="/carta" className="btn btn-primary btn-sm events-partner-btn">
-              <i className="fa-solid fa-utensils"></i> Ver Carta de Ambrosía
-            </Link>
-          </motion.article>
-
-          <motion.article
-            variants={staggerItemVariants}
-            whileHover={{ y: -6 }}
-            className="events-card events-card-genaro"
-          >
-            <div className="genaro-tricolore-bar" aria-hidden="true" />
-            <div className="events-card-top">
-              <div className="partner-card-brand">
-                <img
-                  src="/assets/images/logo_genaro.png"
-                  alt="Logo Focaccería Genaro"
-                  className="partner-card-logo logo-genaro"
-                />
-                <div>
-                  <span className="events-tag tag-genaro">
-                    <i className="fa-solid fa-bread-slice"></i> Tradición Italiana
-                  </span>
-                  <span className="events-date">Focaccia Artesanal</span>
-                </div>
-              </div>
-            </div>
-            <h3>Focaccería Genaro</h3>
-            <p>
-              Auténtica focaccia artesanal elaborada con ingredientes frescos y sabores únicos inspirados en Italia. Juntos armamos boxes mixtas y mesas dulce & salado.
-            </p>
-            <a
-              href="https://focacceria-genaro.vercel.app/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="btn btn-sm events-partner-btn btn-genaro"
+        {/* Card individual del emprendimiento clickeado */}
+        <AnimatePresence mode="wait">
+          {selectedPartner && (
+            <motion.div
+              key={selectedPartner.id}
+              initial={{ opacity: 0, y: 18, scale: 0.96 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: -10, scale: 0.96 }}
+              transition={{ duration: 0.3, ease: EASE_OUT_EXPO }}
+              className="mx-auto mt-6 max-w-lg"
             >
-              <i className="fa-solid fa-arrow-up-right-from-square"></i> Visitar Focaccería Genaro
-            </a>
-          </motion.article>
+              <article className={`${selectedPartner.cardClass} relative`}>
+                {selectedPartner.hasTricolore && <div className="genaro-tricolore-bar" aria-hidden="true" />}
 
-          <motion.article
-            variants={staggerItemVariants}
-            whileHover={{ y: -6 }}
-            className="events-card events-card-quijote"
-          >
-            <div className="events-card-top">
-              <div className="partner-card-brand">
-                <img
-                  src="/assets/images/logo_quijote.jpg"
-                  alt="Logo Don Quijote Pizza Bar"
-                  className="partner-card-logo logo-quijote"
-                />
-                <div>
-                  <span className="events-tag tag-quijote">
-                    <i className="fa-solid fa-pizza-slice"></i> Pizza Bar
-                  </span>
-                  <span className="events-date">Concepción del Uruguay</span>
+                <button
+                  type="button"
+                  onClick={() => setSelectedPartnerId(null)}
+                  aria-label="Cerrar tarjeta y reanudar órbita"
+                  className="absolute right-4 top-4 z-10 flex h-8 w-8 items-center justify-center rounded-full border border-current/20 bg-white/85 text-xs text-[#4A2511] shadow-sm transition hover:scale-105"
+                >
+                  <i className="fa-solid fa-xmark"></i>
+                </button>
+
+                <div className="events-card-top">
+                  <div className="partner-card-brand">
+                    <img
+                      src={selectedPartner.logo}
+                      alt={`Logo ${selectedPartner.title}`}
+                      className={selectedPartner.logoClass}
+                    />
+                    <div>
+                      <span className={selectedPartner.tagClass}>
+                        <i className={selectedPartner.tagIcon}></i> {selectedPartner.tag}
+                      </span>
+                      <span className="events-date">{selectedPartner.subtitle}</span>
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </div>
-            <h3>Don Quijote Pizza Bar</h3>
-            <p>
-              Pizzas caseras, hamburguesas gourmet y barra de tragos en Concepción del Uruguay. Colaboramos con postres, tortas y noches temáticas especiales.
-            </p>
-            <a
-              href="https://don-quijote-web-eta.vercel.app/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="btn btn-sm events-partner-btn btn-quijote"
-            >
-              <i className="fa-solid fa-arrow-up-right-from-square"></i> Visitar Don Quijote
-            </a>
-          </motion.article>
-        </StaggerContainer>
+
+                <h3>{selectedPartner.title}</h3>
+                <p>{selectedPartner.description}</p>
+
+                <div className="mt-2 flex flex-wrap items-center gap-3">
+                  {selectedPartner.external ? (
+                    <a
+                      href={selectedPartner.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={selectedPartner.btnClass}
+                    >
+                      <i className={selectedPartner.ctaIcon}></i> {selectedPartner.ctaLabel}
+                    </a>
+                  ) : (
+                    <Link to={selectedPartner.href} className={selectedPartner.btnClass}>
+                      <i className={selectedPartner.ctaIcon}></i> {selectedPartner.ctaLabel}
+                    </Link>
+                  )}
+
+                  <button
+                    type="button"
+                    onClick={() => setSelectedPartnerId(null)}
+                    className="rounded-full border border-current/25 px-3.5 py-2 text-xs font-bold opacity-80 transition hover:opacity-100"
+                  >
+                    Reanudar órbita
+                  </button>
+                </div>
+              </article>
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         {/* Barra de próximos eventos en conjunto */}
         <Reveal delay={0.12}>

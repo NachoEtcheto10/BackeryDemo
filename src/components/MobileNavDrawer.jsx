@@ -3,9 +3,17 @@ import { useStore } from '../context/StoreContext.jsx';
 import { whatsappUrl } from '../data/catalog.js';
 
 export default function MobileNavDrawer() {
-  const { isMobileNavOpen, setIsMobileNavOpen } = useStore();
+  const { isMobileNavOpen, setIsMobileNavOpen, currentUser } = useStore();
   const location = useLocation();
-  const isSubPage = location.pathname.startsWith('/carta') || location.pathname.startsWith('/club');
+  const isSubPage =
+    location.pathname.startsWith('/carta') ||
+    location.pathname.startsWith('/club') ||
+    location.pathname.startsWith('/cuenta') ||
+    location.pathname.startsWith('/ingresar') ||
+    location.pathname.startsWith('/login') ||
+    location.pathname.startsWith('/registro') ||
+    location.pathname.startsWith('/crear-cuenta') ||
+    location.pathname.startsWith('/admin');
   const close = () => setIsMobileNavOpen(false);
   const homeHref = (hash) => (isSubPage ? `/${hash}` : hash);
 
@@ -65,6 +73,10 @@ export default function MobileNavDrawer() {
           <a href={homeHref('#faq')} className="mobile-link" onClick={close}>
             Preguntas Frecuentes
           </a>
+          <Link to="/cuenta" className="mobile-link font-semibold text-[#4A2511]" onClick={close}>
+            <i className="fa-regular fa-user mr-1.5 text-[#B8761F]"></i>
+            {currentUser ? `Mi Cuenta (${currentUser.name.split(' ')[0]})` : 'Ingresar / Crear Cuenta'}
+          </Link>
         </nav>
 
         <div className="mobile-nav-footer">

@@ -77,35 +77,6 @@ export default function HeroSection() {
               </a>
             </motion.div>
           </motion.div>
-
-          <motion.div
-            className="hero-previews-group"
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.32, ease: EASE_OUT_EXPO }}
-          >
-            <span className="previews-label">Los favoritos:</span>
-            <div className="previews-cards-row">
-              <motion.div whileHover={{ y: -3, scale: 1.02 }} whileTap={{ scale: 0.97 }}>
-                <Link to="/carta?cat=rellenas" className="hero-mini-card" title="Ver Cookies Rellenas">
-                  <img
-                    src="/assets/images/real_cookies_kinder.png"
-                    alt="Cookies rellenas con chocolate Kinder en Ambrosía"
-                  />
-                  <span>Cookies Rellenas</span>
-                </Link>
-              </motion.div>
-              <motion.div whileHover={{ y: -3, scale: 1.02 }} whileTap={{ scale: 0.97 }}>
-                <Link to="/carta?cat=boxes" className="hero-mini-card" title="Ver Boxes de Regalo">
-                  <img
-                    src="/assets/images/real_box_x4.png"
-                    alt="Box x4 cookies artesanales Ambrosía"
-                  />
-                  <span>Boxes de Regalo</span>
-                </Link>
-              </motion.div>
-            </div>
-          </motion.div>
         </div>
 
         <motion.div

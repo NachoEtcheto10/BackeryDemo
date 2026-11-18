@@ -13,6 +13,8 @@ import OrderSuccessModal from './components/OrderSuccessModal.jsx';
 import QuickViewModal from './components/QuickViewModal.jsx';
 import ScrollProgressBar from './components/ScrollProgressBar.jsx';
 import ToastContainer from './components/ToastContainer.jsx';
+import AdminPage from './pages/AdminPage.jsx';
+import AuthPage from './pages/AuthPage.jsx';
 import CartaPage from './pages/CartaPage.jsx';
 import ClubPage from './pages/ClubPage.jsx';
 import HomePage from './pages/HomePage.jsx';
@@ -51,6 +53,12 @@ export default function App() {
               <Route path="/" element={<HomePage />} />
               <Route path="/carta" element={<CartaPage />} />
               <Route path="/club" element={<ClubPage />} />
+              <Route path="/cuenta" element={<AuthPage defaultTab="login" />} />
+              <Route path="/ingresar" element={<AuthPage defaultTab="login" />} />
+              <Route path="/login" element={<AuthPage defaultTab="login" />} />
+              <Route path="/registro" element={<AuthPage defaultTab="register" />} />
+              <Route path="/crear-cuenta" element={<AuthPage defaultTab="register" />} />
+              <Route path="/admin" element={<AdminPage />} />
               <Route path="/carta.html" element={<Navigate to="/carta" replace />} />
               <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>

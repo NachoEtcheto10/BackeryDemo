@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useStore } from '../context/StoreContext.jsx';
 import {
   BUSINESS_CONFIG,
@@ -13,11 +13,13 @@ export default function CheckoutModal() {
   const {
     cart,
     totals,
+    currentUser,
     isCheckoutOpen,
     setIsCheckoutOpen,
     setSuccessOrder,
     clearCart,
-    awardOrderLoyaltyStamp
+    awardOrderLoyaltyStamp,
+    createOrderFromCheckout
   } = useStore();
 
   const minDate = localDateInputValue(1);
@@ -31,6 +33,14 @@ export default function CheckoutModal() {
   const [orderTime, setOrderTime] = useState('Mañana (8:30 a 12:00 hs)');
   const [dedication, setDedication] = useState('');
   const [paymentMethod, setPaymentMethod] = useState('Transferencia Bancaria');
+
+  useEffect(() => {
+    if (isCheckoutOpen && currentUser) {
+      setName((prev) => prev || currentUser.name || '');
+      setPhone((prev) => prev || currentUser.phone || '');
+      setAddress((prev) => prev || currentUser.address || '');
+    }
+  }, [currentUser, isCheckoutOpen]);
 
   if (!isCheckoutOpen) return null;
 
@@ -84,6 +94,26 @@ export default function CheckoutModal() {
 
     const waUrl = whatsappUrl(waMessage);
     window.open(waUrl, '_blank', 'noopener');
+
+    createOrderFromCheckout({
+      orderCode: `#${orderCode}`,
+      customerName: name.trim(),
+      customerEmail: currentUser?.email || '',
+      customerPhone: phone.trim(),
+      deliveryType,
+      address: isShipping ? address.trim() : `Retiro en ${BUSINESS_CONFIG.shortAddress}`,
+      deliveryDate: orderDate,
+      deliveryTime: orderTime,
+      paymentMethod,
+      notes: dedication.trim(),
+      total: totals.total,
+      items: cart.map((item) => ({
+        name: item.name,
+        variantName: item.variantName,
+        quantity: item.quantity,
+        price: item.price
+      }))
+    });
 
     setIsCheckoutOpen(false);
     setSuccessOrder({ orderCode: `#${orderCode}`, waUrl });

@@ -1,6 +1,8 @@
 import { motion } from 'motion/react';
+import { useState } from 'react';
 import { BUSINESS_CONFIG } from '../data/catalog.js';
-import { Reveal, StaggerContainer, staggerItemVariants } from './MotionPrimitives.jsx';
+import DepthCarousel from './DepthCarousel.jsx';
+import { Reveal } from './MotionPrimitives.jsx';
 
 const INSTA_POSTS = [
   {
@@ -30,6 +32,8 @@ const INSTA_POSTS = [
 ];
 
 export default function InstagramSection() {
+  const [activeIndex, setActiveIndex] = useState(0);
+
   return (
     <section className="instagram-section">
       <div className="container text-center">
@@ -39,25 +43,32 @@ export default function InstagramSection() {
           <p className="section-description">Novedades, sabores del día y todo lo que sale del horno.</p>
         </Reveal>
 
-        <StaggerContainer className="instagram-grid" stagger={0.06}>
-          {INSTA_POSTS.map((post) => (
-            <motion.a
-              key={post.image}
-              variants={staggerItemVariants}
-              whileHover={{ y: -4, scale: 1.02 }}
-              whileTap={{ scale: 0.97 }}
-              className="insta-item"
-              href={BUSINESS_CONFIG.instagramUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <img loading="lazy" decoding="async" src={post.image} alt={post.alt} />
-              <div className="insta-overlay">
-                <i className="fa-brands fa-instagram"></i>
-              </div>
-            </motion.a>
-          ))}
-        </StaggerContainer>
+        <Reveal delay={0.08} y={20}>
+          <div className="relative mx-auto mt-6 h-[430px] w-full max-w-[1040px] sm:mt-8 sm:h-[520px] md:h-[570px]">
+            <DepthCarousel
+              items={INSTA_POSTS}
+              cardWidth={390}
+              cardHeight={490}
+              radius={20}
+              tint="#2E160A"
+              depth={240}
+              spread={115}
+              tilt={20}
+              tiltDirection="right"
+              perspective={1400}
+              visibleCards={4}
+              falloff={0.2}
+              blur={5}
+              autoplay
+              autoplayDelay={3200}
+              loop
+              onChange={(idx) => setActiveIndex(idx)}
+            />
+          </div>
+          <p className="mt-2 text-xs font-medium text-[#76553C] sm:text-sm">
+            {INSTA_POSTS[activeIndex]?.alt}
+          </p>
+        </Reveal>
 
         <div className="mt-4">
           <motion.a

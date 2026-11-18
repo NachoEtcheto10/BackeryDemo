@@ -5,12 +5,19 @@ import { useStore } from '../context/StoreContext.jsx';
 import { formatCurrency } from '../data/catalog.js';
 
 export default function Header() {
-  const { totals, setIsCartOpen, setIsMobileNavOpen, cartTriggerRef } = useStore();
+  const { totals, currentUser, setIsCartOpen, setIsMobileNavOpen, cartTriggerRef } = useStore();
   const [scrolled, setScrolled] = useState(false);
   const location = useLocation();
   const isCarta = location.pathname.startsWith('/carta');
   const isClub = location.pathname.startsWith('/club');
-  const isSubPage = isCarta || isClub;
+  const isAuth =
+    location.pathname.startsWith('/cuenta') ||
+    location.pathname.startsWith('/ingresar') ||
+    location.pathname.startsWith('/login') ||
+    location.pathname.startsWith('/registro') ||
+    location.pathname.startsWith('/crear-cuenta');
+  const isAdmin = location.pathname.startsWith('/admin');
+  const isSubPage = isCarta || isClub || isAuth || isAdmin;
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 30);
@@ -74,7 +81,20 @@ export default function Header() {
           </motion.div>
         </nav>
 
-        <div className="header-actions">
+        <div className="header-actions !gap-2.5">
+          <Link
+            to="/cuenta"
+            aria-label={currentUser ? `Mi cuenta (${currentUser.name})` : 'Iniciar sesión o crear cuenta'}
+            title={currentUser ? `Mi cuenta (${currentUser.name})` : 'Iniciar sesión / Crear cuenta'}
+            className={`inline-flex h-10 w-10 items-center justify-center rounded-full border text-sm transition ${
+              isAuth
+                ? 'border-[#4A2511] bg-[#4A2511] text-[#FFF8EC]'
+                : 'border-[#4A2511]/20 bg-white text-[#4A2511] hover:border-[#B8761F] hover:bg-[#FFF8EC]'
+            }`}
+          >
+            <i className={currentUser ? 'fa-solid fa-user-check' : 'fa-regular fa-user'}></i>
+          </Link>
+
           <motion.button
             type="button"
             ref={cartTriggerRef}

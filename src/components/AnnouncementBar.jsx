@@ -4,9 +4,6 @@ export default function AnnouncementBar() {
   return (
     <aside className="announcement-bar" id="announcementBar">
       <div className="container announcement-content">
-        <span className="announcement-pill">
-          <i className="fa-solid fa-cookie-bite"></i> Horneado en el día
-        </span>
         <p>
           Cookies, tortas, chipá y scones recién salidos del horno
           <span className="announcement-extra">

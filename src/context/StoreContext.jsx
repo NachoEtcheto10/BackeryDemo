@@ -1,18 +1,30 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
+import { DEMO_USERS, INITIAL_ORDERS } from '../data/adminSeed.js';
 import { LOYALTY_GOAL, PRODUCTS_DATA } from '../data/catalog.js';
 
 const CART_STORAGE_KEY = 'ambrosia_cart';
 const LOYALTY_STORAGE_KEY = 'ambrosia_loyalty_stamps';
+const PRODUCTS_STORAGE_KEY = 'ambrosia_admin_products';
+const ORDERS_STORAGE_KEY = 'ambrosia_admin_orders';
+const USERS_STORAGE_KEY = 'ambrosia_users';
+const SESSION_STORAGE_KEY = 'ambrosia_session_user_id';
 
 const StoreContext = createContext(null);
 
-function readStoredCart() {
+function readStoredJson(key, fallback) {
   try {
-    const parsed = JSON.parse(localStorage.getItem(CART_STORAGE_KEY));
-    return Array.isArray(parsed) ? parsed : [];
+    const raw = localStorage.getItem(key);
+    if (!raw) return fallback;
+    const parsed = JSON.parse(raw);
+    return parsed ?? fallback;
   } catch {
-    return [];
+    return fallback;
   }
+}
+
+function readStoredCart() {
+  const parsed = readStoredJson(CART_STORAGE_KEY, []);
+  return Array.isArray(parsed) ? parsed : [];
 }
 
 function readStoredStamps() {
@@ -26,10 +38,38 @@ function readStoredStamps() {
   }
 }
 
+function readStoredProducts() {
+  const saved = readStoredJson(PRODUCTS_STORAGE_KEY, null);
+  return Array.isArray(saved) && saved.length > 0 ? saved : PRODUCTS_DATA;
+}
+
+function readStoredOrders() {
+  const saved = readStoredJson(ORDERS_STORAGE_KEY, null);
+  return Array.isArray(saved) && saved.length > 0 ? saved : INITIAL_ORDERS;
+}
+
+function readStoredUsers() {
+  const saved = readStoredJson(USERS_STORAGE_KEY, null);
+  return Array.isArray(saved) && saved.length > 0 ? saved : DEMO_USERS;
+}
+
+function readStoredSessionId() {
+  try {
+    return localStorage.getItem(SESSION_STORAGE_KEY) || '';
+  } catch {
+    return '';
+  }
+}
+
 export function StoreProvider({ children }) {
   const [cart, setCart] = useState(readStoredCart);
   const [loyaltyStamps, setLoyaltyStamps] = useState(readStoredStamps);
   const [lastStampedIndex, setLastStampedIndex] = useState(-1);
+
+  const [products, setProducts] = useState(readStoredProducts);
+  const [orders, setOrders] = useState(readStoredOrders);
+  const [users, setUsers] = useState(readStoredUsers);
+  const [sessionUserId, setSessionUserId] = useState(readStoredSessionId);
 
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isMobileNavOpen, setIsMobileNavOpen] = useState(false);
@@ -39,6 +79,11 @@ export function StoreProvider({ children }) {
   const [toasts, setToasts] = useState([]);
 
   const cartTriggerRef = useRef(null);
+
+  const currentUser = useMemo(
+    () => users.find((u) => u.id === sessionUserId) || null,
+    [users, sessionUserId]
+  );
 
   useEffect(() => {
     try {
@@ -55,6 +100,42 @@ export function StoreProvider({ children }) {
       /* sin espacio en storage */
     }
   }, [loyaltyStamps]);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem(PRODUCTS_STORAGE_KEY, JSON.stringify(products));
+    } catch {
+      /* sin espacio en storage */
+    }
+  }, [products]);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem(ORDERS_STORAGE_KEY, JSON.stringify(orders));
+    } catch {
+      /* sin espacio en storage */
+    }
+  }, [orders]);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem(USERS_STORAGE_KEY, JSON.stringify(users));
+    } catch {
+      /* sin espacio en storage */
+    }
+  }, [users]);
+
+  useEffect(() => {
+    try {
+      if (sessionUserId) {
+        localStorage.setItem(SESSION_STORAGE_KEY, sessionUserId);
+      } else {
+        localStorage.removeItem(SESSION_STORAGE_KEY);
+      }
+    } catch {
+      /* sin espacio en storage */
+    }
+  }, [sessionUserId]);
 
   // Bloqueo de scroll cuando hay algún modal o drawer abierto
   useEffect(() => {
@@ -128,7 +209,7 @@ export function StoreProvider({ children }) {
 
   const addToCart = useCallback(
     (productId, variantIndex = 0, quantity = 1, sourceEl = null, imageSrcOverride = null) => {
-      const product = PRODUCTS_DATA.find((p) => p.id === productId);
+      const product = products.find((p) => p.id === productId);
       if (!product) return false;
       if (product.available === false) {
         showToast(`${product.name} se encuentra actualmente sin stock.`, 'fa-solid fa-ban');
@@ -163,7 +244,7 @@ export function StoreProvider({ children }) {
       showToast(`¡Agregaste ${product.name} a tu canasta!`, 'fa-solid fa-basket-shopping');
       return true;
     },
-    [flyToCart, showToast]
+    [flyToCart, products, showToast]
   );
 
   const addCustomItemToCart = useCallback(
@@ -225,6 +306,183 @@ export function StoreProvider({ children }) {
     });
   }, [showToast]);
 
+  const addProduct = useCallback(
+    (productInput) => {
+      const slug = String(productInput.name || 'producto')
+        .toLowerCase()
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/(^-|-$)/g, '');
+      const newProduct = {
+        ...productInput,
+        id: `${slug || 'producto'}-${Date.now().toString(36)}`,
+        available: productInput.available !== false,
+        variants:
+          Array.isArray(productInput.variants) && productInput.variants.length > 0
+            ? productInput.variants
+            : [{ name: productInput.servings || 'Unidad', price: Number(productInput.basePrice) || 0 }]
+      };
+      setProducts((prev) => [newProduct, ...prev]);
+      showToast(`Producto "${newProduct.name}" agregado a la carta.`, 'fa-solid fa-plus');
+      return newProduct;
+    },
+    [showToast]
+  );
+
+  const updateProduct = useCallback(
+    (id, patch) => {
+      setProducts((prev) => prev.map((p) => (p.id === id ? { ...p, ...patch } : p)));
+      showToast('Producto actualizado correctamente.', 'fa-solid fa-pen-to-square');
+    },
+    [showToast]
+  );
+
+  const toggleProductAvailability = useCallback(
+    (id) => {
+      setProducts((prev) =>
+        prev.map((p) => {
+          if (p.id !== id) return p;
+          const nextAvailable = p.available === false;
+          showToast(
+            `${p.name}: ${nextAvailable ? 'Disponible en carta' : 'Marcado sin stock'}.`,
+            nextAvailable ? 'fa-solid fa-circle-check' : 'fa-solid fa-eye-slash'
+          );
+          return { ...p, available: nextAvailable };
+        })
+      );
+    },
+    [showToast]
+  );
+
+  const deleteProduct = useCallback(
+    (id) => {
+      setProducts((prev) => prev.filter((p) => p.id !== id));
+      showToast('Producto eliminado de la carta.', 'fa-solid fa-trash-can');
+    },
+    [showToast]
+  );
+
+  const resetProductsToDefault = useCallback(() => {
+    setProducts(PRODUCTS_DATA);
+    showToast('Catálogo restaurado a los valores originales.', 'fa-solid fa-rotate-left');
+  }, [showToast]);
+
+  const createOrderFromCheckout = useCallback((orderInput) => {
+    const newOrder = {
+      id: orderInput.orderCode.replace('#', ''),
+      customerName: orderInput.customerName,
+      customerEmail: orderInput.customerEmail || '',
+      customerPhone: orderInput.customerPhone,
+      deliveryType: orderInput.deliveryType,
+      address: orderInput.address,
+      deliveryDate: orderInput.deliveryDate,
+      deliveryTime: orderInput.deliveryTime,
+      paymentMethod: orderInput.paymentMethod,
+      status: 'pendiente',
+      notes: orderInput.notes || '',
+      total: orderInput.total,
+      createdAt: new Date().toISOString().slice(0, 16).replace('T', ' '),
+      items: orderInput.items || []
+    };
+    setOrders((prev) => [newOrder, ...prev]);
+    return newOrder;
+  }, []);
+
+  const updateOrderStatus = useCallback(
+    (orderId, nextStatus) => {
+      setOrders((prev) => prev.map((o) => (o.id === orderId ? { ...o, status: nextStatus } : o)));
+      showToast(`Pedido #${orderId} actualizado.`, 'fa-solid fa-clipboard-check');
+    },
+    [showToast]
+  );
+
+  const registerUser = useCallback(
+    ({ name, email, phone, address = '', password }) => {
+      const normalizedEmail = String(email || '').trim().toLowerCase();
+      if (users.some((u) => u.email.toLowerCase() === normalizedEmail)) {
+        return { ok: false, error: 'Ya existe una cuenta registrada con ese correo electrónico.' };
+      }
+      const newUser = {
+        id: `usr-${Date.now().toString(36)}`,
+        name: String(name || '').trim(),
+        email: normalizedEmail,
+        phone: String(phone || '').trim(),
+        address: String(address || '').trim(),
+        password,
+        role: 'customer',
+        loyaltyStamps: 1,
+        createdAt: new Date().toISOString().slice(0, 10)
+      };
+      setUsers((prev) => [...prev, newUser]);
+      setSessionUserId(newUser.id);
+      setLoyaltyStamps(newUser.loyaltyStamps);
+      showToast(`¡Bienvenido/a a Ambrosía, ${newUser.name.split(' ')[0]}!`, 'fa-solid fa-sparkles');
+      return { ok: true, user: newUser };
+    },
+    [showToast, users]
+  );
+
+  const loginUser = useCallback(
+    ({ email, password }) => {
+      const normalizedEmail = String(email || '').trim().toLowerCase();
+      const found = users.find((u) => u.email.toLowerCase() === normalizedEmail && u.password === password);
+      if (!found) {
+        return { ok: false, error: 'Correo o contraseña incorrectos. Probá con los accesos demo o verificá tus datos.' };
+      }
+      setSessionUserId(found.id);
+      if (typeof found.loyaltyStamps === 'number') {
+        setLoyaltyStamps(found.loyaltyStamps);
+      }
+      showToast(`¡Hola de nuevo, ${found.name.split(' ')[0]}!`, 'fa-solid fa-user-check');
+      return { ok: true, user: found };
+    },
+    [showToast, users]
+  );
+
+  const loginAsDemo = useCallback(
+    (role = 'customer') => {
+      const found = users.find((u) => u.role === role);
+      if (!found) return null;
+      setSessionUserId(found.id);
+      if (typeof found.loyaltyStamps === 'number') {
+        setLoyaltyStamps(found.loyaltyStamps);
+      }
+      showToast(
+        role === 'admin' ? 'Ingresaste al Panel Admin de Ambrosía.' : `Sesión iniciada como ${found.name}.`,
+        role === 'admin' ? 'fa-solid fa-shield-halved' : 'fa-solid fa-user-check'
+      );
+      return found;
+    },
+    [showToast, users]
+  );
+
+  const updateProfile = useCallback(
+    (patch) => {
+      if (!sessionUserId) return;
+      setUsers((prev) => prev.map((u) => (u.id === sessionUserId ? { ...u, ...patch } : u)));
+      showToast('Tus datos de perfil fueron guardados.', 'fa-solid fa-check');
+    },
+    [sessionUserId, showToast]
+  );
+
+  const updateCustomerStamps = useCallback(
+    (userId, nextCount) => {
+      const clamped = Math.max(0, Math.min(LOYALTY_GOAL, nextCount));
+      setUsers((prev) => prev.map((u) => (u.id === userId ? { ...u, loyaltyStamps: clamped } : u)));
+      if (userId === sessionUserId) {
+        setLoyaltyStamps(clamped);
+      }
+      showToast('Sellos de fidelidad actualizados.', 'fa-solid fa-award');
+    },
+    [sessionUserId, showToast]
+  );
+
+  const logoutUser = useCallback(() => {
+    setSessionUserId('');
+    showToast('Cerraste tu sesión correctamente.', 'fa-solid fa-right-from-bracket');
+  }, [showToast]);
+
   const totals = useMemo(() => {
     const subtotal = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
     const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
@@ -236,6 +494,10 @@ export function StoreProvider({ children }) {
     totals,
     loyaltyStamps,
     lastStampedIndex,
+    products,
+    orders,
+    users,
+    currentUser,
     isCartOpen,
     setIsCartOpen,
     isMobileNavOpen,
@@ -255,7 +517,20 @@ export function StoreProvider({ children }) {
     removeFromCart,
     clearCart,
     updateLoyaltyStamps,
-    awardOrderLoyaltyStamp
+    awardOrderLoyaltyStamp,
+    addProduct,
+    updateProduct,
+    toggleProductAvailability,
+    deleteProduct,
+    resetProductsToDefault,
+    createOrderFromCheckout,
+    updateOrderStatus,
+    registerUser,
+    loginUser,
+    loginAsDemo,
+    updateProfile,
+    updateCustomerStamps,
+    logoutUser
   };
 
   return <StoreContext.Provider value={value}>{children}</StoreContext.Provider>;

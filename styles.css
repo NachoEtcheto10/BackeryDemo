@@ -1031,7 +1031,6 @@ h1, h2, h3, h4 {
 .values-marquee-track {
   display: flex;
   width: max-content;
-  animation: marqueeScroll 60s linear infinite;
 }
 
 .values-marquee-group {
@@ -1050,12 +1049,8 @@ h1, h2, h3, h4 {
 }
 
 .values-marquee-group i {
-  font-size: 0.55rem;
+  font-size: 0.8rem;
   color: #F2B95C;
-}
-
-@keyframes marqueeScroll {
-  to { transform: translateX(-50%); }
 }
 
 /* ==========================================================================

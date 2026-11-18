@@ -8,13 +8,12 @@ import {
   CATEGORY_FILTERS,
   CATEGORY_LABELS,
   DEFAULT_PRODUCT_IMG,
-  PRODUCTS_DATA,
   formatCurrency,
   normalizeText
 } from '../data/catalog.js';
 
 export default function CartaPage() {
-  const { addToCart, setQuickViewProduct } = useStore();
+  const { products, addToCart, setQuickViewProduct } = useStore();
   const [searchParams, setSearchParams] = useSearchParams();
 
   const initialCat = searchParams.get('cat');
@@ -41,18 +40,18 @@ export default function CartaPage() {
   };
 
   const countsByCategory = useMemo(() => {
-    const counts = { all: PRODUCTS_DATA.length };
+    const counts = { all: products.length };
     CATEGORY_FILTERS.forEach((cat) => {
       if (cat.id !== 'all') {
-        counts[cat.id] = PRODUCTS_DATA.filter((p) => p.category === cat.id).length;
+        counts[cat.id] = products.filter((p) => p.category === cat.id).length;
       }
     });
     return counts;
-  }, []);
+  }, [products]);
 
   const filteredProducts = useMemo(() => {
     const query = normalizeText(search);
-    const list = PRODUCTS_DATA.filter((product) => {
+    const list = products.filter((product) => {
       const matchesCat = filter === 'all' || product.category === filter;
       const matchesQuery =
         !query ||
@@ -72,7 +71,7 @@ export default function CartaPage() {
       return [...list].sort((a, b) => a.name.localeCompare(b.name, 'es'));
     }
     return list;
-  }, [filter, search, sort]);
+  }, [filter, products, search, sort]);
 
   return (
     <>
