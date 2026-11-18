@@ -1,6 +1,8 @@
+import { AnimatePresence, motion } from 'motion/react';
 import { useNavigate } from 'react-router-dom';
 import { useStore } from '../context/StoreContext.jsx';
 import { DEFAULT_PRODUCT_IMG, REWARD_GOAL, formatCurrency } from '../data/catalog.js';
+import { EASE_OUT_EXPO } from './MotionPrimitives.jsx';
 
 export default function CartDrawer() {
   const {
@@ -81,13 +83,22 @@ export default function CartDrawer() {
             </span>
           </div>
           <div className="reward-progress-track">
-            <div className="reward-progress-fill" style={{ width: `${rewardPercent}%` }} />
+            <motion.div
+              className="reward-progress-fill"
+              initial={false}
+              animate={{ width: `${rewardPercent}%` }}
+              transition={{ type: 'spring', stiffness: 180, damping: 24 }}
+            />
           </div>
         </div>
 
         <div className="cart-drawer-body">
           {cart.length === 0 ? (
-            <div className="cart-empty-state">
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="cart-empty-state"
+            >
               <div className="empty-cart-illu">
                 <i className="fa-solid fa-basket-shopping"></i>
               </div>
@@ -96,55 +107,65 @@ export default function CartDrawer() {
               <button type="button" className="btn btn-primary btn-sm" onClick={handleExplore}>
                 Explorar Carta Dulce
               </button>
-            </div>
+            </motion.div>
           ) : (
-            cart.map((item) => (
-              <div key={item.cartItemId} className="cart-item">
-                <img
-                  src={item.image}
-                  alt={item.name}
-                  className="cart-item-img"
-                  onError={(e) => {
-                    e.currentTarget.src = DEFAULT_PRODUCT_IMG;
-                  }}
-                />
-                <div className="cart-item-details">
-                  <h4 className="cart-item-title">{item.name}</h4>
-                  <span className="cart-item-variant">{item.variantName}</span>
-                  <div className="cart-item-controls">
-                    <div className="qty-stepper">
-                      <button
-                        type="button"
-                        className="qty-btn"
-                        aria-label="Disminuir"
-                        onClick={() => updateItemQuantity(item.cartItemId, -1)}
-                      >
-                        <i className="fa-solid fa-minus"></i>
-                      </button>
-                      <span className="qty-val">{item.quantity}</span>
-                      <button
-                        type="button"
-                        className="qty-btn"
-                        aria-label="Aumentar"
-                        onClick={() => updateItemQuantity(item.cartItemId, 1)}
-                      >
-                        <i className="fa-solid fa-plus"></i>
-                      </button>
-                    </div>
-                    <span className="cart-item-price">{formatCurrency(item.price * item.quantity)}</span>
-                  </div>
-                </div>
-                <button
-                  type="button"
-                  className="cart-item-remove-btn"
-                  title="Eliminar de la canasta"
-                  aria-label="Eliminar"
-                  onClick={() => removeFromCart(item.cartItemId)}
+            <AnimatePresence initial={false}>
+              {cart.map((item) => (
+                <motion.div
+                  key={item.cartItemId}
+                  layout
+                  initial={{ opacity: 0, x: 24 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: 36, height: 0, marginBottom: 0 }}
+                  transition={{ duration: 0.28, ease: EASE_OUT_EXPO }}
+                  className="cart-item"
                 >
-                  <i className="fa-solid fa-trash-can"></i>
-                </button>
-              </div>
-            ))
+                  <img
+                    src={item.image}
+                    alt={item.name}
+                    className="cart-item-img"
+                    onError={(e) => {
+                      e.currentTarget.src = DEFAULT_PRODUCT_IMG;
+                    }}
+                  />
+                  <div className="cart-item-details">
+                    <h4 className="cart-item-title">{item.name}</h4>
+                    <span className="cart-item-variant">{item.variantName}</span>
+                    <div className="cart-item-controls">
+                      <div className="qty-stepper">
+                        <button
+                          type="button"
+                          className="qty-btn"
+                          aria-label="Disminuir"
+                          onClick={() => updateItemQuantity(item.cartItemId, -1)}
+                        >
+                          <i className="fa-solid fa-minus"></i>
+                        </button>
+                        <span className="qty-val">{item.quantity}</span>
+                        <button
+                          type="button"
+                          className="qty-btn"
+                          aria-label="Aumentar"
+                          onClick={() => updateItemQuantity(item.cartItemId, 1)}
+                        >
+                          <i className="fa-solid fa-plus"></i>
+                        </button>
+                      </div>
+                      <span className="cart-item-price">{formatCurrency(item.price * item.quantity)}</span>
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    className="cart-item-remove-btn"
+                    title="Eliminar de la canasta"
+                    aria-label="Eliminar"
+                    onClick={() => removeFromCart(item.cartItemId)}
+                  >
+                    <i className="fa-solid fa-trash-can"></i>
+                  </button>
+                </motion.div>
+              ))}
+            </AnimatePresence>
           )}
         </div>
 
@@ -160,10 +181,16 @@ export default function CartDrawer() {
             </div>
           </div>
 
-          <button type="button" className="btn btn-primary btn-block btn-checkout" onClick={handleProceed}>
+          <motion.button
+            type="button"
+            whileHover={{ y: -2 }}
+            whileTap={{ scale: 0.97 }}
+            className="btn btn-primary btn-block btn-checkout"
+            onClick={handleProceed}
+          >
             <span>Completar Pedido por WhatsApp</span>
             <i className="fa-solid fa-arrow-right"></i>
-          </button>
+          </motion.button>
 
           <p className="cart-legal-note">
             <i className="fa-solid fa-lock"></i> Pedido 100% seguro · Coordinación inmediata por WhatsApp

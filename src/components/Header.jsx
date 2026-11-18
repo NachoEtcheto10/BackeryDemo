@@ -1,3 +1,4 @@
+import { motion } from 'motion/react';
 import { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useStore } from '../context/StoreContext.jsx';
@@ -6,7 +7,6 @@ import { formatCurrency } from '../data/catalog.js';
 export default function Header() {
   const { totals, setIsCartOpen, setIsMobileNavOpen, cartTriggerRef } = useStore();
   const [scrolled, setScrolled] = useState(false);
-  const [badgeBump, setBadgeBump] = useState(false);
   const location = useLocation();
   const isCarta = location.pathname.startsWith('/carta');
   const isClub = location.pathname.startsWith('/club');
@@ -18,21 +18,15 @@ export default function Header() {
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
-  useEffect(() => {
-    if (totals.totalItems > 0) {
-      setBadgeBump(true);
-      const t = setTimeout(() => setBadgeBump(false), 380);
-      return () => clearTimeout(t);
-    }
-  }, [totals.totalItems]);
-
   const homeHref = (hash) => (isSubPage ? `/${hash}` : hash);
 
   return (
     <header className={`main-header ${scrolled ? 'scrolled' : ''}`} id="mainHeader">
       <div className="container header-container">
         <Link to="/" className="brand-identity">
-          <img
+          <motion.img
+            whileHover={{ rotate: [-3, 3, 0], scale: 1.06 }}
+            transition={{ duration: 0.4 }}
             src="/assets/images/logo.svg"
             alt="Logo Ambrosía Bakery"
             className="brand-logo"
@@ -73,15 +67,19 @@ export default function Header() {
           <a href={homeHref('#contacto')} className="nav-link">
             Contacto
           </a>
-          <Link to="/club" className={`nav-link nav-link-club ${isClub ? 'active' : ''}`}>
-            <i className="fa-solid fa-award"></i> Club Ambrosía
-          </Link>
+          <motion.div whileHover={{ y: -2, scale: 1.03 }} whileTap={{ scale: 0.96 }}>
+            <Link to="/club" className={`nav-link nav-link-club ${isClub ? 'active' : ''}`}>
+              <i className="fa-solid fa-award"></i> Club Ambrosía
+            </Link>
+          </motion.div>
         </nav>
 
         <div className="header-actions">
-          <button
+          <motion.button
             type="button"
             ref={cartTriggerRef}
+            whileHover={{ scale: 1.03 }}
+            whileTap={{ scale: 0.95 }}
             className="cart-trigger-btn"
             id="cartTriggerBtn"
             aria-label="Ver canasta de compras"
@@ -89,14 +87,21 @@ export default function Header() {
           >
             <div className="cart-icon-box">
               <i className="fa-solid fa-basket-shopping"></i>
-              <span className={`cart-badge ${badgeBump ? 'bump' : ''}`} id="cartBadge">
+              <motion.span
+                key={totals.totalItems}
+                initial={{ scale: 0.55, y: -4 }}
+                animate={{ scale: 1, y: 0 }}
+                transition={{ type: 'spring', stiffness: 450, damping: 18 }}
+                className="cart-badge"
+                id="cartBadge"
+              >
                 {totals.totalItems}
-              </span>
+              </motion.span>
             </div>
             <span className="cart-total-label" id="cartHeaderTotal">
               {formatCurrency(totals.total)}
             </span>
-          </button>
+          </motion.button>
         </div>
       </div>
     </header>

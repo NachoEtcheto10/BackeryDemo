@@ -1,4 +1,6 @@
+import { motion } from 'motion/react';
 import { BUSINESS_CONFIG, whatsappUrl } from '../data/catalog.js';
+import { Reveal, StaggerContainer, staggerItemVariants } from './MotionPrimitives.jsx';
 
 const FAQS = [
   {
@@ -59,25 +61,33 @@ export default function FaqSection() {
   return (
     <section className="faq-section" id="faq">
       <div className="container faq-layout">
-        <div className="faq-intro">
+        <Reveal className="faq-intro" x={-16} y={12}>
           <span className="section-subtitle">Resolvemos tus dudas</span>
           <h2 className="section-title">Preguntas Frecuentes</h2>
           <p className="section-description">
             Todo lo que necesitás saber antes de hacer tu pedido en Ambrosía.
           </p>
-          <a
+          <motion.a
+            whileHover={{ y: -2, scale: 1.02 }}
+            whileTap={{ scale: 0.97 }}
             href={whatsappUrl('Hola!! 🍪 Tengo una consulta.')}
             target="_blank"
             rel="noopener noreferrer"
             className="btn btn-outline"
           >
             <i className="fa-brands fa-whatsapp"></i> Tengo otra consulta
-          </a>
-        </div>
+          </motion.a>
+        </Reveal>
 
-        <div className="faq-accordion-wrapper">
+        <StaggerContainer className="faq-accordion-wrapper" stagger={0.07}>
           {FAQS.map((item) => (
-            <details key={item.q} className="faq-item" name="faq" open={Boolean(item.defaultOpen)}>
+            <motion.details
+              key={item.q}
+              variants={staggerItemVariants}
+              className="faq-item"
+              name="faq"
+              open={Boolean(item.defaultOpen)}
+            >
               <summary className="faq-question">
                 <span>{item.q}</span>
                 <span className="faq-chevron">
@@ -85,9 +95,9 @@ export default function FaqSection() {
                 </span>
               </summary>
               <div className="faq-answer">{item.a}</div>
-            </details>
+            </motion.details>
           ))}
-        </div>
+        </StaggerContainer>
       </div>
     </section>
   );

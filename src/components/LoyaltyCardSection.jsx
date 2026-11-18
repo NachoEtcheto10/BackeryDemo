@@ -1,5 +1,7 @@
+import { motion } from 'motion/react';
 import { useStore } from '../context/StoreContext.jsx';
 import { LOYALTY_GOAL, whatsappUrl } from '../data/catalog.js';
+import { Reveal } from './MotionPrimitives.jsx';
 
 export default function LoyaltyCardSection() {
   const { loyaltyStamps, lastStampedIndex, updateLoyaltyStamps, showToast } = useStore();
@@ -38,7 +40,7 @@ export default function LoyaltyCardSection() {
   return (
     <section className="loyalty-section" id="fidelidad">
       <div className="container loyalty-layout">
-        <div className="loyalty-info-col">
+        <Reveal className="loyalty-info-col" x={-18} y={12}>
           <span className="section-subtitle">
             <i className="fa-solid fa-award"></i> Club Ambrosía
           </span>
@@ -63,22 +65,34 @@ export default function LoyaltyCardSection() {
           </ul>
 
           <div className="loyalty-actions-row">
-            <button
+            <motion.button
               type="button"
+              whileHover={{ y: -2, scale: 1.02 }}
+              whileTap={{ scale: 0.95 }}
               className="btn btn-primary"
               disabled={completed}
               onClick={handleAddStamp}
             >
               <i className="fa-solid fa-stamp"></i> Sumar 1 Sello
-            </button>
-            <button type="button" className="btn btn-secondary" onClick={handleReset}>
+            </motion.button>
+            <motion.button
+              type="button"
+              whileHover={{ y: -2 }}
+              whileTap={{ scale: 0.95 }}
+              className="btn btn-secondary"
+              onClick={handleReset}
+            >
               <i className="fa-solid fa-rotate-left"></i> Reiniciar
-            </button>
+            </motion.button>
           </div>
-        </div>
+        </Reveal>
 
-        <div className="loyalty-card-col">
-          <div className={`loyalty-card-shell ${completed ? 'is-completed' : ''}`}>
+        <Reveal className="loyalty-card-col" x={18} y={16} delay={0.08}>
+          <motion.div
+            animate={completed ? { scale: [1, 1.02, 1] } : undefined}
+            transition={{ duration: 0.6 }}
+            className={`loyalty-card-shell ${completed ? 'is-completed' : ''}`}
+          >
             <div className="loyalty-card-top">
               <div className="loyalty-brand-row">
                 <img
@@ -93,9 +107,14 @@ export default function LoyaltyCardSection() {
                   <strong className="loyalty-card-name">Pasaporte Cookie</strong>
                 </div>
               </div>
-              <span className="loyalty-count-badge">
+              <motion.span
+                key={loyaltyStamps}
+                initial={{ scale: 0.8 }}
+                animate={{ scale: 1 }}
+                className="loyalty-count-badge"
+              >
                 {loyaltyStamps} / {LOYALTY_GOAL} sellos
-              </span>
+              </motion.span>
             </div>
 
             <div
@@ -108,26 +127,35 @@ export default function LoyaltyCardSection() {
                 const isRewardSlot = idx === LOYALTY_GOAL - 1;
                 const justStamped = idx === lastStampedIndex && isFilled;
                 return (
-                  <button
+                  <motion.button
                     key={idx}
                     type="button"
+                    whileHover={{ y: -3, scale: 1.04 }}
+                    whileTap={{ scale: 0.88 }}
+                    animate={justStamped ? { scale: [0.75, 1.15, 1], rotate: [-10, 6, 0] } : undefined}
+                    transition={{ type: 'spring', stiffness: 420, damping: 18 }}
                     className={`loyalty-stamp-btn ${isFilled ? 'is-filled' : ''} ${
                       isRewardSlot ? 'is-reward-slot' : ''
-                    } ${justStamped ? 'just-stamped' : ''}`}
+                    }`}
                     aria-label={isRewardSlot ? 'Sello 8 - Premio' : `Sello ${idx + 1}`}
                     aria-pressed={isFilled}
                     onClick={() => handleStampClick(idx)}
                   >
                     <i className={isRewardSlot ? 'fa-solid fa-gift' : 'fa-solid fa-cookie-bite'}></i>
                     <span>{isRewardSlot ? 'PREMIO' : idx + 1}</span>
-                  </button>
+                  </motion.button>
                 );
               })}
             </div>
 
             <div className="loyalty-progress-wrap">
               <div className="loyalty-progress-track">
-                <div className="loyalty-progress-fill" style={{ width: `${percent}%` }} />
+                <motion.div
+                  className="loyalty-progress-fill"
+                  initial={false}
+                  animate={{ width: `${percent}%` }}
+                  transition={{ type: 'spring', stiffness: 180, damping: 24 }}
+                />
               </div>
               <p className="loyalty-status-text">
                 {completed ? (
@@ -149,16 +177,18 @@ export default function LoyaltyCardSection() {
               </p>
             </div>
 
-            <button
+            <motion.button
               type="button"
+              whileHover={{ y: -2, scale: 1.02 }}
+              whileTap={{ scale: 0.97 }}
               className={`btn btn-whatsapp-full loyalty-claim-btn ${completed ? 'is-ready' : ''}`}
               onClick={handleClaim}
             >
               <i className="fa-brands fa-whatsapp"></i>{' '}
               {completed ? '¡Canjear Premio por WhatsApp!' : 'Consultar mi Club por WhatsApp'}
-            </button>
-          </div>
-        </div>
+            </motion.button>
+          </motion.div>
+        </Reveal>
       </div>
     </section>
   );

@@ -5814,20 +5814,23 @@ section[id] {
     font-size: 0.74rem;
   }
 
-  .offerings-item:last-child {
+  .offerings-grid > *:last-child {
     grid-column: span 2;
+  }
+
+  .offerings-grid > *:last-child .offerings-item {
     flex-direction: row;
     align-items: center;
   }
 
-  .offerings-item:last-child .offerings-thumb {
+  .offerings-grid > *:last-child .offerings-thumb {
     width: 108px;
     height: 92px;
     aspect-ratio: auto;
     flex-shrink: 0;
   }
 
-  .offerings-item:last-child .offerings-item-body p {
+  .offerings-grid > *:last-child .offerings-item-body p {
     display: block;
     font-size: 0.78rem;
   }

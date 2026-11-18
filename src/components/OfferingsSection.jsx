@@ -1,4 +1,6 @@
+import { motion } from 'motion/react';
 import { Link } from 'react-router-dom';
+import { Reveal, StaggerContainer, staggerItemVariants } from './MotionPrimitives.jsx';
 
 const OFFERINGS = [
   {
@@ -47,7 +49,7 @@ export default function OfferingsSection() {
   return (
     <section className="offerings-section" id="ofrecemos">
       <div className="container">
-        <div className="offerings-showcase-card">
+        <Reveal className="offerings-showcase-card" y={28}>
           <div className="offerings-header">
             <span className="section-subtitle">
               <i className="fa-solid fa-cookie-bite"></i> Nuestra Carta
@@ -58,36 +60,48 @@ export default function OfferingsSection() {
             </p>
           </div>
 
-          <div className="offerings-grid">
+          <StaggerContainer className="offerings-grid" stagger={0.07}>
             {OFFERINGS.map((item) => (
-              <Link key={item.cat} to={`/carta?cat=${item.cat}`} className="offerings-item">
-                <img
-                  src={item.image}
-                  alt={item.alt}
-                  className="offerings-thumb"
-                  loading="lazy"
-                  decoding="async"
-                />
-                <div className="offerings-item-body">
-                  <h3>{item.title}</h3>
-                  <p>{item.desc}</p>
-                  <span className="offerings-link">
-                    {item.linkLabel} <i className="fa-solid fa-arrow-right"></i>
-                  </span>
-                </div>
-              </Link>
+              <motion.div
+                key={item.cat}
+                variants={staggerItemVariants}
+                whileHover={{ y: -6 }}
+                whileTap={{ scale: 0.97 }}
+                className="flex"
+              >
+                <Link to={`/carta?cat=${item.cat}`} className="offerings-item w-full">
+                  <img
+                    src={item.image}
+                    alt={item.alt}
+                    className="offerings-thumb"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                  <div className="offerings-item-body">
+                    <h3>{item.title}</h3>
+                    <p>{item.desc}</p>
+                    <span className="offerings-link">
+                      {item.linkLabel} <i className="fa-solid fa-arrow-right"></i>
+                    </span>
+                  </div>
+                </Link>
+              </motion.div>
             ))}
-          </div>
+          </StaggerContainer>
 
           <div className="offerings-cta-bar">
-            <Link to="/carta" className="btn btn-primary btn-lg">
-              <i className="fa-solid fa-utensils"></i> Ver Carta Completa y Hacer Pedido
-            </Link>
-            <a href="#cotizador" className="btn btn-secondary">
-              <i className="fa-solid fa-gift"></i> Armar mi Box Personalizada
-            </a>
+            <motion.div whileHover={{ y: -2, scale: 1.02 }} whileTap={{ scale: 0.97 }}>
+              <Link to="/carta" className="btn btn-primary btn-lg">
+                <i className="fa-solid fa-utensils"></i> Ver Carta Completa y Hacer Pedido
+              </Link>
+            </motion.div>
+            <motion.div whileHover={{ y: -2, scale: 1.02 }} whileTap={{ scale: 0.97 }}>
+              <a href="#cotizador" className="btn btn-secondary">
+                <i className="fa-solid fa-gift"></i> Armar mi Box Personalizada
+              </a>
+            </motion.div>
           </div>
-        </div>
+        </Reveal>
       </div>
     </section>
   );

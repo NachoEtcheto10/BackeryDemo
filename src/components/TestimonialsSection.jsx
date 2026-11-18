@@ -1,3 +1,6 @@
+import { motion } from 'motion/react';
+import { Reveal, StaggerContainer, staggerItemVariants } from './MotionPrimitives.jsx';
+
 const TESTIMONIALS = [
   {
     initials: 'MF',
@@ -26,18 +29,20 @@ export default function TestimonialsSection() {
   return (
     <section className="testimonials-section">
       <div className="container">
-        <div className="section-header text-center">
+        <Reveal className="section-header text-center">
           <span className="section-subtitle">Momentos Dulces</span>
           <h2 className="section-title">Lo que dicen quienes ya probaron</h2>
           <p className="section-description">
             Cada desayuno sorpresa, cada merienda compartida y cada box regalada es lo que nos mueve.
           </p>
-        </div>
+        </Reveal>
 
-        <div className="testimonials-grid">
+        <StaggerContainer className="testimonials-grid" stagger={0.09}>
           {TESTIMONIALS.map((item) => (
-            <div
+            <motion.div
               key={item.name}
+              variants={staggerItemVariants}
+              whileHover={{ y: -6 }}
               className={`testimonial-card ${item.highlight ? 'highlight-card' : ''}`}
             >
               <div className="testimonial-stars">
@@ -55,9 +60,9 @@ export default function TestimonialsSection() {
                   <span>{item.meta}</span>
                 </div>
               </div>
-            </div>
+            </motion.div>
           ))}
-        </div>
+        </StaggerContainer>
       </div>
     </section>
   );

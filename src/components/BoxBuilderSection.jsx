@@ -1,3 +1,4 @@
+import { AnimatePresence, motion } from 'motion/react';
 import { useRef, useState } from 'react';
 import { useStore } from '../context/StoreContext.jsx';
 import {
@@ -9,6 +10,7 @@ import {
   localDateInputValue,
   whatsappUrl
 } from '../data/catalog.js';
+import { EASE_OUT_EXPO, Reveal } from './MotionPrimitives.jsx';
 
 const DEFAULT_BOX_IMG = '/assets/images/box_cookies_regalo.jpg';
 
@@ -141,7 +143,7 @@ export default function BoxBuilderSection() {
   return (
     <section className="custom-cake-section" id="cotizador">
       <div className="container">
-        <div className="section-header text-center custom-cake-header">
+        <Reveal className="section-header text-center custom-cake-header">
           <span className="section-subtitle">
             <i className="fa-solid fa-gift"></i> Para vos o para regalar
           </span>
@@ -149,10 +151,10 @@ export default function BoxBuilderSection() {
           <p className="section-description">
             Elegí el tamaño, el tipo de cookie y tus sabores favoritos. Sumale chipá o scones y una tarjeta con dedicatoria: nosotros la armamos con todo el amor.
           </p>
-        </div>
+        </Reveal>
 
         <div className="cake-builder-layout">
-          <div className="builder-form-card">
+          <Reveal className="builder-form-card" x={-18} y={16}>
             <form className="custom-cake-form" onSubmit={(e) => e.preventDefault()}>
               {/* PASO 1 */}
               <div className="builder-step-block">
@@ -166,7 +168,12 @@ export default function BoxBuilderSection() {
 
                 <div className="cake-diameters-grid">
                   {Object.entries(BOX_SPECS).map(([key, item]) => (
-                    <label key={key} className="cake-diameter-card">
+                    <motion.label
+                      key={key}
+                      whileHover={{ y: -3 }}
+                      whileTap={{ scale: 0.96 }}
+                      className="cake-diameter-card"
+                    >
                       <input
                         type="radio"
                         name="cakeDiameter"
@@ -189,14 +196,14 @@ export default function BoxBuilderSection() {
                           <span className="diameter-price">Desde {formatCurrency(item.tiers.clasicas.price)}</span>
                         </div>
                       </div>
-                    </label>
+                    </motion.label>
                   ))}
                 </div>
 
                 <div className="fillings-tier-selector">
                   <span className="sub-field-label">Tipo de cookie:</span>
                   <div className="fillings-tier-buttons">
-                    <label className="tier-pill-label">
+                    <motion.label whileTap={{ scale: 0.97 }} className="tier-pill-label">
                       <input
                         type="radio"
                         name="cakeFillingsTier"
@@ -208,9 +215,9 @@ export default function BoxBuilderSection() {
                         <span className="tier-num">Clásicas</span>
                         <span className="tier-subtext">{formatCurrency(spec.tiers.clasicas.price)}</span>
                       </div>
-                    </label>
+                    </motion.label>
 
-                    <label className="tier-pill-label">
+                    <motion.label whileTap={{ scale: 0.97 }} className="tier-pill-label">
                       <input
                         type="radio"
                         name="cakeFillingsTier"
@@ -222,7 +229,7 @@ export default function BoxBuilderSection() {
                         <span className="tier-num">Rellenas</span>
                         <span className="tier-subtext">{formatCurrency(spec.tiers.rellenas.price)}</span>
                       </div>
-                    </label>
+                    </motion.label>
                   </div>
                 </div>
               </div>
@@ -239,7 +246,12 @@ export default function BoxBuilderSection() {
 
                 <div className="sponge-choices-grid">
                   {BOX_EXTRAS.map((opt) => (
-                    <label key={opt.value} className="sponge-card">
+                    <motion.label
+                      key={opt.value}
+                      whileHover={{ y: -3 }}
+                      whileTap={{ scale: 0.96 }}
+                      className="sponge-card"
+                    >
                       <input
                         type="radio"
                         name="cakeSponge"
@@ -254,7 +266,7 @@ export default function BoxBuilderSection() {
                         <span className="sponge-name">{opt.label}</span>
                         <small className="sponge-desc">{opt.desc}</small>
                       </div>
-                    </label>
+                    </motion.label>
                   ))}
                 </div>
 
@@ -286,8 +298,9 @@ export default function BoxBuilderSection() {
                     const isChecked = trimmedFlavors.includes(flavor.name);
                     const isDisabled = !isChecked && maxReached;
                     return (
-                      <label
+                      <motion.label
                         key={flavor.name}
+                        whileTap={!isDisabled ? { scale: 0.95 } : undefined}
                         className={`filling-check-card ${isDisabled ? 'disabled' : ''}`}
                       >
                         <input
@@ -302,16 +315,24 @@ export default function BoxBuilderSection() {
                           <i className={`${flavor.icon} filling-icon`}></i>
                           <span className="filling-name">{flavor.name}</span>
                         </div>
-                      </label>
+                      </motion.label>
                     );
                   })}
                 </div>
 
-                {maxReached && (
-                  <small className="field-hint" style={{ color: 'var(--color-primary-dark)' }}>
-                    <i className="fa-solid fa-circle-exclamation"></i> Ya elegiste el máximo de sabores para esta box. Desmarcá uno si querés cambiarlo.
-                  </small>
-                )}
+                <AnimatePresence>
+                  {maxReached && (
+                    <motion.small
+                      initial={{ opacity: 0, y: -4 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0 }}
+                      className="field-hint"
+                      style={{ color: 'var(--color-primary-dark)' }}
+                    >
+                      <i className="fa-solid fa-circle-exclamation"></i> Ya elegiste el máximo de sabores para esta box. Desmarcá uno si querés cambiarlo.
+                    </motion.small>
+                  )}
+                </AnimatePresence>
               </div>
 
               {/* PASO 4 */}
@@ -330,7 +351,11 @@ export default function BoxBuilderSection() {
                   </p>
                   <div className="inspiration-heart-divider">
                     <span className="divider-line" />
-                    <i className="fa-solid fa-heart divider-heart"></i>
+                    <motion.i
+                      animate={{ scale: [1, 1.22, 1] }}
+                      transition={{ duration: 1.8, repeat: Infinity, ease: 'easeInOut' }}
+                      className="fa-solid fa-heart divider-heart"
+                    />
                     <span className="divider-line" />
                   </div>
                   <p className="inspiration-tags">Tarjeta, colores de moño, logo de tu empresa ¡y más!</p>
@@ -388,23 +413,36 @@ export default function BoxBuilderSection() {
                     </div>
                   </div>
 
-                  {refPhotos.length > 0 && (
-                    <div className="attached-previews-grid">
-                      {refPhotos.map((photo, index) => (
-                        <div key={`${photo.name}-${index}`} className="attached-preview-thumb">
-                          <img src={photo.url} alt={photo.name} />
-                          <button
-                            type="button"
-                            className="btn-remove-thumb"
-                            aria-label="Eliminar foto"
-                            onClick={() => removePhoto(index)}
+                  <AnimatePresence>
+                    {refPhotos.length > 0 && (
+                      <motion.div
+                        initial={{ opacity: 0, height: 0 }}
+                        animate={{ opacity: 1, height: 'auto' }}
+                        exit={{ opacity: 0, height: 0 }}
+                        className="attached-previews-grid"
+                      >
+                        {refPhotos.map((photo, index) => (
+                          <motion.div
+                            key={`${photo.name}-${index}`}
+                            initial={{ scale: 0.7, opacity: 0 }}
+                            animate={{ scale: 1, opacity: 1 }}
+                            exit={{ scale: 0.7, opacity: 0 }}
+                            className="attached-preview-thumb"
                           >
-                            <i className="fa-solid fa-xmark"></i>
-                          </button>
-                        </div>
-                      ))}
-                    </div>
-                  )}
+                            <img src={photo.url} alt={photo.name} />
+                            <button
+                              type="button"
+                              className="btn-remove-thumb"
+                              aria-label="Eliminar foto"
+                              onClick={() => removePhoto(index)}
+                            >
+                              <i className="fa-solid fa-xmark"></i>
+                            </button>
+                          </motion.div>
+                        ))}
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
                 </div>
 
                 <div className="form-group mt-3">
@@ -422,9 +460,9 @@ export default function BoxBuilderSection() {
                 </div>
               </div>
             </form>
-          </div>
+          </Reveal>
 
-          <div className="builder-preview-sticky">
+          <Reveal className="builder-preview-sticky" x={18} y={16} delay={0.1}>
             <div className="live-cake-preview-card">
               <div className="preview-card-media">
                 <img
@@ -478,7 +516,15 @@ export default function BoxBuilderSection() {
                 <div className="preview-price-box">
                   <div className="price-data">
                     <span className="price-title">Precio Estimado</span>
-                    <span className="price-amount">{formatCurrency(totalPrice)}</span>
+                    <motion.span
+                      key={totalPrice}
+                      initial={{ scale: 0.86, opacity: 0.5 }}
+                      animate={{ scale: 1, opacity: 1 }}
+                      transition={{ duration: 0.28, ease: EASE_OUT_EXPO }}
+                      className="price-amount"
+                    >
+                      {formatCurrency(totalPrice)}
+                    </motion.span>
                   </div>
                   <span className="price-clarification">
                     Precio de referencia · Te confirmamos por WhatsApp
@@ -486,20 +532,24 @@ export default function BoxBuilderSection() {
                 </div>
 
                 <div className="builder-actions-stack">
-                  <button
+                  <motion.button
                     type="button"
+                    whileHover={{ y: -2, scale: 1.01 }}
+                    whileTap={{ scale: 0.97 }}
                     className="btn btn-whatsapp-full btn-lg"
                     onClick={handleWhatsappOrder}
                   >
                     <i className="fa-brands fa-whatsapp"></i> Pedir mi Box por WhatsApp
-                  </button>
-                  <button
+                  </motion.button>
+                  <motion.button
                     type="button"
+                    whileHover={{ y: -2, scale: 1.01 }}
+                    whileTap={{ scale: 0.97 }}
                     className="btn btn-secondary btn-block"
                     onClick={handleAddToCart}
                   >
                     <i className="fa-solid fa-basket-shopping"></i> Agregar a la Canasta
-                  </button>
+                  </motion.button>
                 </div>
 
                 <p className="preview-guarantee">
@@ -507,7 +557,7 @@ export default function BoxBuilderSection() {
                 </p>
               </div>
             </div>
-          </div>
+          </Reveal>
         </div>
       </div>
     </section>

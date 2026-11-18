@@ -1,6 +1,8 @@
+import { motion } from 'motion/react';
 import { useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { whatsappUrl } from '../data/catalog.js';
+import { Reveal, StaggerContainer, staggerItemVariants } from './MotionPrimitives.jsx';
 
 const ORBIT_PARTNERS = [
   {
@@ -42,7 +44,7 @@ export default function AllianceSection() {
   const stageRef = useRef(null);
   const nodeRefs = useRef([]);
 
-  // Animación orbital en 60fps garantizada por requestAnimationFrame (no depende de flags del SO)
+  // Animación orbital en 60fps garantizada por requestAnimationFrame
   useEffect(() => {
     let rafId = 0;
     let startTime = null;
@@ -77,7 +79,7 @@ export default function AllianceSection() {
   return (
     <section className="events-section" id="eventos">
       <div className="container">
-        <div className="section-header text-center">
+        <Reveal className="section-header text-center">
           <span className="section-subtitle">
             <i className="fa-solid fa-handshake"></i> Alianza Gastronómica Local
           </span>
@@ -87,71 +89,85 @@ export default function AllianceSection() {
             <strong>Focaccería Genaro</strong> y <strong>Don Quijote Pizza Bar</strong>. Unimos lo
             dulce y lo salado para crear eventos, mesas compartidas y experiencias únicas.
           </p>
-        </div>
+        </Reveal>
 
         {/* Órbita animada de los 3 logos girando */}
-        <div
-          ref={stageRef}
-          className="relative mx-auto my-2 mb-10 flex h-[288px] w-[288px] items-center justify-center sm:mb-14 sm:h-[400px] sm:w-[400px]"
-          aria-label="Logos de la alianza girando: Ambrosía Bakery, Focaccería Genaro y Don Quijote Pizza Bar"
-        >
-          {/* Anillo punteado exacto al 37.5% de radio (inset 12.5%) */}
-          <div className="pointer-events-none absolute inset-[12.5%] rounded-full border-2 border-dashed border-[#B8761F]/45" />
+        <Reveal scale={0.92} y={16}>
+          <div
+            ref={stageRef}
+            className="relative mx-auto my-2 mb-10 flex h-[288px] w-[288px] items-center justify-center sm:mb-14 sm:h-[400px] sm:w-[400px]"
+            aria-label="Logos de la alianza girando: Ambrosía Bakery, Focaccería Genaro y Don Quijote Pizza Bar"
+          >
+            {/* Anillo punteado exacto al 37.5% de radio (inset 12.5%) */}
+            <div className="pointer-events-none absolute inset-[12.5%] rounded-full border-2 border-dashed border-[#B8761F]/45" />
 
-          {ORBIT_PARTNERS.map((partner, idx) => {
-            const inner = (
-              <>
-                <div
-                  className={`flex h-16 w-16 items-center justify-center rounded-full border-[3px] shadow-lg transition-transform duration-300 hover:scale-110 sm:h-20 sm:w-20 ${partner.medallionClass}`}
-                >
-                  <img src={partner.logo} alt={`Logo ${partner.title}`} className={partner.imgClass} />
-                </div>
-                <span
-                  className={`pointer-events-none absolute top-full left-1/2 mt-1 -translate-x-1/2 whitespace-nowrap rounded-full border px-2 py-0.5 text-[10px] font-bold shadow-sm sm:mt-1.5 sm:px-2.5 sm:text-[11px] ${partner.labelClass}`}
-                >
-                  {partner.label}
-                </span>
-              </>
-            );
+            {/* Halo pulsante suave en el centro */}
+            <motion.div
+              aria-hidden="true"
+              className="pointer-events-none absolute h-28 w-28 rounded-full bg-[#F9C77A]/25 sm:h-32 sm:w-32"
+              animate={{ scale: [1, 1.25, 1], opacity: [0.5, 0.15, 0.5] }}
+              transition={{ duration: 3.2, repeat: Infinity, ease: 'easeInOut' }}
+            />
 
-            return (
-              <div
-                key={partner.id}
-                ref={(el) => {
-                  nodeRefs.current[idx] = el;
-                }}
-                className="absolute left-1/2 top-1/2 z-20 -ml-8 -mt-8 h-16 w-16 will-change-transform sm:-ml-10 sm:-mt-10 sm:h-20 sm:w-20"
-              >
-                {partner.external ? (
-                  <a
-                    href={partner.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    title={partner.title}
-                    className="relative block h-full w-full"
+            {ORBIT_PARTNERS.map((partner, idx) => {
+              const inner = (
+                <>
+                  <div
+                    className={`flex h-16 w-16 items-center justify-center rounded-full border-[3px] shadow-lg transition-transform duration-300 hover:scale-110 sm:h-20 sm:w-20 ${partner.medallionClass}`}
                   >
-                    {inner}
-                  </a>
-                ) : (
-                  <Link to={partner.href} title={partner.title} className="relative block h-full w-full">
-                    {inner}
-                  </Link>
-                )}
-              </div>
-            );
-          })}
+                    <img src={partner.logo} alt={`Logo ${partner.title}`} className={partner.imgClass} />
+                  </div>
+                  <span
+                    className={`pointer-events-none absolute top-full left-1/2 mt-1 -translate-x-1/2 whitespace-nowrap rounded-full border px-2 py-0.5 text-[10px] font-bold shadow-sm sm:mt-1.5 sm:px-2.5 sm:text-[11px] ${partner.labelClass}`}
+                  >
+                    {partner.label}
+                  </span>
+                </>
+              );
 
-          {/* Sello central */}
-          <div className="relative z-10 flex h-24 w-24 flex-col items-center justify-center rounded-full border-2 border-[#F9C77A]/75 bg-gradient-to-br from-[#4A2511] to-[#2E160A] p-2 text-center text-[#FFF8EC] shadow-xl sm:h-28 sm:w-28">
-            <i className="fa-solid fa-handshake mb-0.5 text-base text-[#F9C77A] sm:mb-1 sm:text-lg"></i>
-            <strong className="font-serif text-xs leading-tight sm:text-sm">Alianza x3</strong>
-            <span className="text-[9px] tracking-wide text-[#F2DFC4] sm:text-[10px]">C. del Uruguay</span>
+              return (
+                <div
+                  key={partner.id}
+                  ref={(el) => {
+                    nodeRefs.current[idx] = el;
+                  }}
+                  className="absolute left-1/2 top-1/2 z-20 -ml-8 -mt-8 h-16 w-16 will-change-transform sm:-ml-10 sm:-mt-10 sm:h-20 sm:w-20"
+                >
+                  {partner.external ? (
+                    <a
+                      href={partner.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      title={partner.title}
+                      className="relative block h-full w-full"
+                    >
+                      {inner}
+                    </a>
+                  ) : (
+                    <Link to={partner.href} title={partner.title} className="relative block h-full w-full">
+                      {inner}
+                    </Link>
+                  )}
+                </div>
+              );
+            })}
+
+            {/* Sello central */}
+            <div className="relative z-10 flex h-24 w-24 flex-col items-center justify-center rounded-full border-2 border-[#F9C77A]/75 bg-gradient-to-br from-[#4A2511] to-[#2E160A] p-2 text-center text-[#FFF8EC] shadow-xl sm:h-28 sm:w-28">
+              <i className="fa-solid fa-handshake mb-0.5 text-base text-[#F9C77A] sm:mb-1 sm:text-lg"></i>
+              <strong className="font-serif text-xs leading-tight sm:text-sm">Alianza x3</strong>
+              <span className="text-[9px] tracking-wide text-[#F2DFC4] sm:text-[10px]">C. del Uruguay</span>
+            </div>
           </div>
-        </div>
+        </Reveal>
 
         {/* 3 Cards personalizadas al estilo de cada emprendimiento */}
-        <div className="events-grid alliance-cards-grid">
-          <article className="events-card events-card-ambrosia">
+        <StaggerContainer className="events-grid alliance-cards-grid" stagger={0.09}>
+          <motion.article
+            variants={staggerItemVariants}
+            whileHover={{ y: -6 }}
+            className="events-card events-card-ambrosia"
+          >
             <div className="events-card-top">
               <div className="partner-card-brand">
                 <img
@@ -174,9 +190,13 @@ export default function AllianceSection() {
             <Link to="/carta" className="btn btn-primary btn-sm events-partner-btn">
               <i className="fa-solid fa-utensils"></i> Ver Carta de Ambrosía
             </Link>
-          </article>
+          </motion.article>
 
-          <article className="events-card events-card-genaro">
+          <motion.article
+            variants={staggerItemVariants}
+            whileHover={{ y: -6 }}
+            className="events-card events-card-genaro"
+          >
             <div className="genaro-tricolore-bar" aria-hidden="true" />
             <div className="events-card-top">
               <div className="partner-card-brand">
@@ -205,9 +225,13 @@ export default function AllianceSection() {
             >
               <i className="fa-solid fa-arrow-up-right-from-square"></i> Visitar Focaccería Genaro
             </a>
-          </article>
+          </motion.article>
 
-          <article className="events-card events-card-quijote">
+          <motion.article
+            variants={staggerItemVariants}
+            whileHover={{ y: -6 }}
+            className="events-card events-card-quijote"
+          >
             <div className="events-card-top">
               <div className="partner-card-brand">
                 <img
@@ -235,29 +259,33 @@ export default function AllianceSection() {
             >
               <i className="fa-solid fa-arrow-up-right-from-square"></i> Visitar Don Quijote
             </a>
-          </article>
-        </div>
+          </motion.article>
+        </StaggerContainer>
 
         {/* Barra de próximos eventos en conjunto */}
-        <div className="alliance-upcoming-bar">
-          <div className="alliance-upcoming-text">
-            <span className="events-tag">
-              <i className="fa-solid fa-calendar-days"></i> Agenda 2026
-            </span>
-            <div>
-              <strong>Próximos Pop-Ups, Ferias & Combos Conjuntos</strong>
-              <p>Se vienen fechas especiales, degustaciones y boxes edición limitada entre las tres marcas.</p>
+        <Reveal delay={0.12}>
+          <div className="alliance-upcoming-bar">
+            <div className="alliance-upcoming-text">
+              <span className="events-tag">
+                <i className="fa-solid fa-calendar-days"></i> Agenda 2026
+              </span>
+              <div>
+                <strong>Próximos Pop-Ups, Ferias & Combos Conjuntos</strong>
+                <p>Se vienen fechas especiales, degustaciones y boxes edición limitada entre las tres marcas.</p>
+              </div>
             </div>
+            <motion.a
+              whileHover={{ y: -2, scale: 1.02 }}
+              whileTap={{ scale: 0.97 }}
+              href={whatsappUrl('Hola!! 🤝 Quisiera consultar por los próximos eventos y colaboraciones de la alianza.')}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn btn-primary btn-sm"
+            >
+              <i className="fa-brands fa-whatsapp"></i> Consultar Próximos Eventos
+            </motion.a>
           </div>
-          <a
-            href={whatsappUrl('Hola!! 🤝 Quisiera consultar por los próximos eventos y colaboraciones de la alianza.')}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="btn btn-primary btn-sm"
-          >
-            <i className="fa-brands fa-whatsapp"></i> Consultar Próximos Eventos
-          </a>
-        </div>
+        </Reveal>
       </div>
     </section>
   );

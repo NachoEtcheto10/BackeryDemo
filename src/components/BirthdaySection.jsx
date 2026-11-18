@@ -1,4 +1,6 @@
+import { motion } from 'motion/react';
 import { whatsappUrl } from '../data/catalog.js';
+import { Reveal, StaggerContainer, staggerItemVariants } from './MotionPrimitives.jsx';
 
 const BIRTHDAY_SERVICES = [
   {
@@ -22,7 +24,7 @@ export default function BirthdaySection() {
   return (
     <section className="birthday-section" id="cumpleanos">
       <div className="container">
-        <div className="birthday-banner">
+        <Reveal className="birthday-banner" y={24}>
           <div className="birthday-header">
             <span className="section-subtitle">
               <i className="fa-solid fa-cake-candles"></i> Celebrá con Ambrosía
@@ -33,32 +35,43 @@ export default function BirthdaySection() {
             </p>
           </div>
 
-          <div className="birthday-grid">
+          <StaggerContainer className="birthday-grid" stagger={0.09}>
             {BIRTHDAY_SERVICES.map((item) => (
-              <article key={item.title} className="birthday-card">
-                <div className="birthday-icon">
+              <motion.article
+                key={item.title}
+                variants={staggerItemVariants}
+                whileHover={{ y: -5 }}
+                className="birthday-card group"
+              >
+                <motion.div
+                  className="birthday-icon"
+                  whileHover={{ rotate: [-6, 6, 0], scale: 1.08 }}
+                  transition={{ duration: 0.35 }}
+                >
                   <i className={item.icon}></i>
-                </div>
+                </motion.div>
                 <h3>{item.title}</h3>
                 <p>{item.desc}</p>
-              </article>
+              </motion.article>
             ))}
-          </div>
+          </StaggerContainer>
 
           <div className="birthday-cta-row">
             <span className="birthday-note">
               <i className="fa-regular fa-calendar"></i> Reservá tu fecha con al menos 72 hs de anticipación
             </span>
-            <a
+            <motion.a
+              whileHover={{ y: -2, scale: 1.02 }}
+              whileTap={{ scale: 0.97 }}
               href={whatsappUrl('Hola!! 🎂 Quisiera consultar por el servicio de cumpleaños (tortas y mesa dulce).')}
               target="_blank"
               rel="noopener noreferrer"
               className="btn btn-primary"
             >
               <i className="fa-brands fa-whatsapp"></i> Consultar por mi Cumpleaños
-            </a>
+            </motion.a>
           </div>
-        </div>
+        </Reveal>
       </div>
     </section>
   );

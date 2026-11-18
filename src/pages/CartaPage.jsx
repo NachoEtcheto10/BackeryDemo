@@ -1,5 +1,7 @@
+import { AnimatePresence, motion } from 'motion/react';
 import { useEffect, useMemo, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
+import { EASE_OUT_EXPO, Reveal } from '../components/MotionPrimitives.jsx';
 import { useStore } from '../context/StoreContext.jsx';
 import {
   BUSINESS_CONFIG,
@@ -89,28 +91,40 @@ export default function CartaPage() {
 
       <section className="catalog-section carta-full-catalog" id="catalogo">
         <div className="container">
-          <div className="section-header text-center">
+          <Reveal className="section-header text-center">
             <span className="section-subtitle">Recién salido del horno</span>
             <h1 className="section-title">Nuestra Carta</h1>
             <p className="section-description">
               Elegí tus favoritos entre cookies, tortas clásicas, chipá, scones y boxes de regalo. Sumalos a la canasta y completá tu pedido por WhatsApp.
             </p>
-          </div>
+          </Reveal>
 
           <div className="catalog-toolbar">
             <div className="categories-scroll-wrapper">
-              {CATEGORY_FILTERS.map((cat) => (
-                <button
-                  key={cat.id}
-                  type="button"
-                  className={`category-pill-card ${filter === cat.id ? 'active' : ''}`}
-                  onClick={() => handleSelectCategory(cat.id)}
-                >
-                  <i className={`${cat.icon} category-pill-icon`}></i>
-                  <span className="category-pill-name">{cat.name}</span>
-                  <span className="category-pill-count">{countsByCategory[cat.id] ?? 0}</span>
-                </button>
-              ))}
+              {CATEGORY_FILTERS.map((cat) => {
+                const isActive = filter === cat.id;
+                return (
+                  <motion.button
+                    key={cat.id}
+                    type="button"
+                    whileHover={{ y: -2 }}
+                    whileTap={{ scale: 0.95 }}
+                    className={`category-pill-card relative ${isActive ? 'active' : ''}`}
+                    onClick={() => handleSelectCategory(cat.id)}
+                  >
+                    {isActive && (
+                      <motion.span
+                        layoutId="activeCategoryIndicator"
+                        transition={{ type: 'spring', stiffness: 360, damping: 28 }}
+                        className="pointer-events-none absolute inset-0 rounded-[inherit] border-2 border-[#B8761F]/50"
+                      />
+                    )}
+                    <i className={`${cat.icon} category-pill-icon`}></i>
+                    <span className="category-pill-name">{cat.name}</span>
+                    <span className="category-pill-count">{countsByCategory[cat.id] ?? 0}</span>
+                  </motion.button>
+                );
+              })}
             </div>
           </div>
 
@@ -161,7 +175,11 @@ export default function CartaPage() {
           </div>
 
           {filteredProducts.length === 0 ? (
-            <div className="no-results-state">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.96 }}
+              animate={{ opacity: 1, scale: 1 }}
+              className="no-results-state"
+            >
               <div className="no-results-icon">
                 <i className="fa-solid fa-cookie-bite"></i>
               </div>
@@ -177,128 +195,136 @@ export default function CartaPage() {
               >
                 Ver toda la carta
               </button>
-            </div>
+            </motion.div>
           ) : (
-            <div className="products-grid is-animating">
-              {filteredProducts.map((product, index) => {
-                const isAvailable = product.available !== false;
-                const hasVariants = product.variants && product.variants.length > 1;
-                return (
-                  <article
-                    key={product.id}
-                    className={`product-card ${isAvailable ? '' : 'is-out-of-stock'}`}
-                    style={{ '--i': Math.min(index, 8) }}
-                  >
-                    <div
-                      className="product-card-thumb-wrapper"
-                      onClick={() => setQuickViewProduct(product)}
+            <motion.div layout className="products-grid">
+              <AnimatePresence mode="popLayout">
+                {filteredProducts.map((product, index) => {
+                  const isAvailable = product.available !== false;
+                  const hasVariants = product.variants && product.variants.length > 1;
+                  return (
+                    <motion.article
+                      layout
+                      key={product.id}
+                      initial={{ opacity: 0, y: 16, scale: 0.96 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      exit={{ opacity: 0, scale: 0.94 }}
+                      transition={{ duration: 0.35, delay: Math.min(index, 6) * 0.04, ease: EASE_OUT_EXPO }}
+                      whileHover={{ y: -5 }}
+                      className={`product-card ${isAvailable ? '' : 'is-out-of-stock'}`}
                     >
-                      <img
-                        src={product.image}
-                        alt={product.name}
-                        className="product-card-img"
-                        loading="lazy"
-                        decoding="async"
-                        onError={(e) => {
-                          e.currentTarget.src = DEFAULT_PRODUCT_IMG;
-                        }}
-                      />
-                      {!isAvailable ? (
-                        <span className="product-badge out-of-stock">
-                          <i className="fa-solid fa-ban"></i> Sin Stock
-                        </span>
-                      ) : (
-                        product.badge && (
-                          <span
-                            className={`product-badge ${
-                              product.badgeType === 'chef' ? 'chef' : 'gold'
-                            }`}
-                          >
-                            {product.badge}
-                          </span>
-                        )
-                      )}
-                      <button
-                        type="button"
-                        className="product-quick-view-btn"
-                        title="Ver detalles e ingredientes"
-                        aria-label={`Ver detalles de ${product.name}`}
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setQuickViewProduct(product);
-                        }}
-                      >
-                        <i className="fa-solid fa-eye"></i>
-                      </button>
-                    </div>
-
-                    <div className="product-card-body">
-                      <div className="product-card-meta">
-                        <span className="product-category-tag">
-                          {CATEGORY_LABELS[product.category] || product.category}
-                        </span>
-                        <span className="product-servings-tag">
-                          <i className="fa-regular fa-user"></i> {product.servings}
-                        </span>
-                      </div>
-
-                      <h3
-                        className="product-card-title"
+                      <div
+                        className="product-card-thumb-wrapper"
                         onClick={() => setQuickViewProduct(product)}
                       >
-                        {product.name}
-                      </h3>
-                      <p className="product-card-desc">{product.description}</p>
-
-                      <div className="product-card-footer">
-                        <div className="product-card-price-box">
-                          <span className="product-card-price-label">
-                            {hasVariants ? 'Desde' : 'Precio'}
+                        <img
+                          src={product.image}
+                          alt={product.name}
+                          className="product-card-img"
+                          loading="lazy"
+                          decoding="async"
+                          onError={(e) => {
+                            e.currentTarget.src = DEFAULT_PRODUCT_IMG;
+                          }}
+                        />
+                        {!isAvailable ? (
+                          <span className="product-badge out-of-stock">
+                            <i className="fa-solid fa-ban"></i> Sin Stock
                           </span>
-                          <span className="product-card-price">
-                            {product.basePrice > 0 ? formatCurrency(product.basePrice) : 'Consultar'}
+                        ) : (
+                          product.badge && (
+                            <span
+                              className={`product-badge ${
+                                product.badgeType === 'chef' ? 'chef' : 'gold'
+                              }`}
+                            >
+                              {product.badge}
+                            </span>
+                          )
+                        )}
+                        <button
+                          type="button"
+                          className="product-quick-view-btn"
+                          title="Ver detalles e ingredientes"
+                          aria-label={`Ver detalles de ${product.name}`}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setQuickViewProduct(product);
+                          }}
+                        >
+                          <i className="fa-solid fa-eye"></i>
+                        </button>
+                      </div>
+
+                      <div className="product-card-body">
+                        <div className="product-card-meta">
+                          <span className="product-category-tag">
+                            {CATEGORY_LABELS[product.category] || product.category}
+                          </span>
+                          <span className="product-servings-tag">
+                            <i className="fa-regular fa-user"></i> {product.servings}
                           </span>
                         </div>
-                        {isAvailable ? (
-                          <button
-                            type="button"
-                            className="product-add-btn"
-                            aria-label={`${hasVariants ? 'Elegir presentación de' : 'Agregar'} ${
-                              product.name
-                            }`}
-                            onClick={(e) => {
-                              if (hasVariants) {
-                                setQuickViewProduct(product);
-                              } else {
-                                const cardImg = e.currentTarget
-                                  .closest('.product-card')
-                                  ?.querySelector('.product-card-img');
-                                addToCart(product.id, 0, 1, cardImg, product.image);
-                              }
-                            }}
-                          >
-                            <i className="fa-solid fa-plus"></i>{' '}
-                            <span>{hasVariants ? 'Elegir' : 'Agregar'}</span>
-                          </button>
-                        ) : (
-                          <button
-                            type="button"
-                            className="product-add-btn out-of-stock"
-                            disabled
-                            title="Producto temporalmente sin stock"
-                          >
-                            <i className="fa-solid fa-ban"></i> <span>Sin Stock</span>
-                          </button>
-                        )}
+
+                        <h3
+                          className="product-card-title"
+                          onClick={() => setQuickViewProduct(product)}
+                        >
+                          {product.name}
+                        </h3>
+                        <p className="product-card-desc">{product.description}</p>
+
+                        <div className="product-card-footer">
+                          <div className="product-card-price-box">
+                            <span className="product-card-price-label">
+                              {hasVariants ? 'Desde' : 'Precio'}
+                            </span>
+                            <span className="product-card-price">
+                              {product.basePrice > 0 ? formatCurrency(product.basePrice) : 'Consultar'}
+                            </span>
+                          </div>
+                          {isAvailable ? (
+                            <motion.button
+                              type="button"
+                              whileTap={{ scale: 0.9 }}
+                              className="product-add-btn"
+                              aria-label={`${hasVariants ? 'Elegir presentación de' : 'Agregar'} ${
+                                product.name
+                              }`}
+                              onClick={(e) => {
+                                if (hasVariants) {
+                                  setQuickViewProduct(product);
+                                } else {
+                                  const cardImg = e.currentTarget
+                                    .closest('.product-card')
+                                    ?.querySelector('.product-card-img');
+                                  addToCart(product.id, 0, 1, cardImg, product.image);
+                                }
+                              }}
+                            >
+                              <i className="fa-solid fa-plus"></i>{' '}
+                              <span>{hasVariants ? 'Elegir' : 'Agregar'}</span>
+                            </motion.button>
+                          ) : (
+                            <button
+                              type="button"
+                              className="product-add-btn out-of-stock"
+                              disabled
+                              title="Producto temporalmente sin stock"
+                            >
+                              <i className="fa-solid fa-ban"></i> <span>Sin Stock</span>
+                            </button>
+                          )}
+                        </div>
                       </div>
-                    </div>
-                  </article>
-                );
-              })}
-            </div>
+                    </motion.article>
+                  );
+                })}
+              </AnimatePresence>
+            </motion.div>
           )}
 
-          <div className="order-steps">
+          <Reveal className="order-steps" y={20}>
             <div className="order-step">
               <span className="order-step-num">01</span>
               <div>
@@ -320,7 +346,7 @@ export default function CartaPage() {
                 <p>Pasá por {BUSINESS_CONFIG.shortAddress} o te lo llevamos, recién horneado.</p>
               </div>
             </div>
-          </div>
+          </Reveal>
         </div>
       </section>
     </>
